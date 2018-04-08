@@ -52,7 +52,10 @@ public class XmlAddressBookStorage implements AddressBookStorage {
             return Optional.empty();
         }
 
-        XmlSerializableAddressBook xmlAddressBook = XmlFileStorage.loadDataFromSaveFile(new File(filePath));
+        //XmlSerializableAddressBook xmlAddressBook = XmlFileStorage.loadDataFromSaveFile(new File(filePath));
+        SecurityUtil.decrypt(addressBookFile);
+        XmlSerializableAddressBook xmlAddressBook = XmlFileStorage.loadDataFromSaveFile(addressBookFile);
+        SecurityUtil.encrypt(addressBookFile);
         try {
             return Optional.of(xmlAddressBook.toModelType());
         } catch (IllegalValueException ive) {
@@ -79,7 +82,9 @@ public class XmlAddressBookStorage implements AddressBookStorage {
 
         File file = new File(filePath);
         FileUtil.createIfMissing(file);
+        SecurityUtil.decrypt(file);
         XmlFileStorage.saveDataToFile(file, new XmlSerializableAddressBook(addressBook));
+        SecurityUtil.encrypt(file);
     }
 
 }

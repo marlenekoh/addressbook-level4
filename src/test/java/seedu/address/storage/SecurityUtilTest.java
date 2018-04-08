@@ -7,10 +7,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
+//@@author marlenekoh
 public class SecurityUtilTest {
     @Test
     public void encryptDecrypt_successful_emptyResult() throws Exception {

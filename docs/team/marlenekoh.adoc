@@ -1,0 +1,55 @@
+= Marlene Koh - Project Portfolio
+:imagesDir: ../images
+:stylesDir: ../stylesheets
+
+== PROJECT: NUSCouples
+
+---
+
+== Overview
+
+NUSCouples is a desktop application targeted at couples studying in the National University of Singapore (NUS).
+The user interacts with it using a CLI, and it has a GUI created with JavaFX. It is written in Java, and has about 10 kLoC.
+
+== Summary of contributions
+
+* *Major enhancement*: added *a timetable field and the ability to view the NUSMods timetable of the person stored in NUSCouples*
+** What it does: allows the user to view the schedule of their partner with just one command/one click.
+** Justification: this feature allows the user to keep updated with their partner's school schedule.
+
+* *Minor enhancement*: added a command to compare and display the common breaks in the NUSMods timetable of the person
+stored in NUSCouples along with one other given timetable.
+
+* *Code contributed*: [https://github.com/CS2103JAN2018-T09-B4/main/blob/master/collated/functional/marlenekoh.md[Functional code]]
+ [https://github.com/CS2103JAN2018-T09-B4/main/blob/master/collated/test/marlenekoh.md[Test code]]
+
+* *Other contributions*:
+
+** Project management:
+*** Managed releases `v1.3` - `v1.5rc` (3 releases) on GitHub
+** Enhancements to existing features:
+*** Add code to add a timetable field to person (Pull request https://github.com/CS2103JAN2018-T09-B4/main/pull/71[#71])
+*** Add code to parse timetable given an NUSMods URL (Pull request https://github.com/CS2103JAN2018-T09-B4/main/pull/76[#76])
+*** Reimplemented select and created deselect command to view and hide timetable respectively
+(Pull requests https://github.com/CS2103JAN2018-T09-B4/main/pull/127[#127], https://github.com/CS2103JAN2018-T09-B4/main/pull/155[#155])
+*** Add command to compare timetables (Pull request https://github.com/CS2103JAN2018-T09-B4/main/pull/161[#161])
+*** Wrote tests (Pull request https://github.com/CS2103JAN2018-T09-B4/main/pull/74[#74])
+** Community:
+*** PRs reviewed (with non-trivial review comments): https://github.com/CS2103JAN2018-T09-B4/main/pull/148[#148]
+
+== Contributions to the User Guide
+
+
+|===
+|_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
+|===
+
+include::../UserGuide.adoc[tag=timetable]
+
+== Contributions to the Developer Guide
+
+|===
+|_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
+|===
+
+include::../DeveloperGuide.adoc[tag=timetable]

@@ -394,11 +394,11 @@ image::UndoRedoActivityDiagram.png[width="650"]
 ** Cons: Requires dealing with commands that have already been undone: We must remember to skip these commands. Violates Single Responsibility Principle and Separation of Concerns as `HistoryManager` now needs to do two * different things.
 // end::undoredo[]
 
-// tag::dataencryption[]
 
 |===
 | [.small]#Return to <<toc,Table of Contents>># +
 |===
+// tag::dataencryption[]
 
 === [Proposed] Data Encryption
 
@@ -439,6 +439,7 @@ Certain properties of the application can be controlled (e.g App name, logging l
 | [.small]#Return to <<toc,Table of Contents>># +
 |===
 
+// tag::calendar[]
 === [Proposed] Calendar Viewer Feature
 ==== Current Implementation
 The Calendar Viewer mechanism is facilitated by `Google Calendar API` and reside in the `ModelManager`.
@@ -492,7 +493,9 @@ image::viewCalendarSeqDiagram.png[width="850"]
 | [.small]#Return to <<toc,Table of Contents>># +
 |===
 
-=== [Proposed] Timetable Viewer feature
+//tag::timetable[]
+
+=== Timetable Viewer feature
 ==== Proposed Implementation
 The Timetable Viewer feature is implemented by `Timetable`, which will reside in `ModelManager`.
 
@@ -535,6 +538,7 @@ image::AddTimetableSequenceDiagram.png[width="650"]
 ** Pros: Easier to implement due to how NUSMods API is structured.
 ** Cons: Difficult to extract out information for a particular time slot on a particular day.
 
+// end::timetable[]
 |===
 | [.small]#Return to <<toc,Table of Contents>># +
 |===

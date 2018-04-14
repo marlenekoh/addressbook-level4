@@ -2,23 +2,31 @@
 :imagesDir: ../images
 :stylesDir: ../stylesheets
 
-== PROJECT: AddressBook - Level 4
+image::chenxing.png[width="150", align="left"]
+{empty}[https://github.com/chenxing1992[github]]
+
+== PROJECT: NUSCouples
 
 ---
 
 == Overview
 
-AddressBook - Level 4 is a desktop address book application used for teaching Software Engineering principles. The user interacts with it using a CLI, and it has a GUI created with JavaFX. It is written in Java, and has about 10 kLoC.
+_NUSCouples_ is a command-line desktop application targeted at couples studying at the National University of Singapore (NUS).
+It aims to help these couples create and remember new memories during their time in NUS.
 
 == Summary of contributions
 
-* *Major enhancement*: added *the ability to undo/redo previous commands*
-** What it does: allows the user to undo all previous commands one at a time. Preceding undo commands can be reversed by using the redo command.
-** Justification: This feature improves the product significantly because a user can make mistakes in commands and the app should provide a convenient way to rectify them.
-** Highlights: This enhancement affects existing commands and commands to be added in future. It required an in-depth analysis of design alternatives. The implementation too was challenging as it required changes to existing commands.
-** Credits: _{mention here if you reused any code/ideas from elsewhere or if a third-party library is heavily used in the feature so that a reader can make a more accurate judgement of how much effort went into the feature}_
+* *Major enhancement*: added *the ability View/Add/Delete Calendar commands*
+** What it does: What it does is that it will show the Calendar Window when the App is opened. This Calendar have the ability to change the View of the calendar, adding new event(s) to it and deleting the event(s).
+** Justification: This feature improves the product significantly because a user needs a decent looking calendar with some basic features to keep them reminded and manage upcoming events with his/her partner or other miscellaneous events.
+** Highlights: This enhancement does not affect existing commands and commands to be added in future. It required an in-depth analysis of design alternatives. The implementation too was challenging as it required changes to existing commands and external Calendar API.
+** Credits: This features uses CalendarFx API interface, however the interface is in GUI so i manipulated commands to morph into a CLI calendar interface to fit into this project. _
 
-* *Minor enhancement*: added a history command that allows the user to navigate to previous commands using up/down keys.
+* *Minor enhancement*: added commands to the command box to ease the user by managing the caret to jump from last index to first index and vice versa.
+
+* *Future enhancement*: will be implementing Google Calendar to sync the Calendar in the App currently.
+include::../userGuide.adoc[tag=googleAPI]
+
 
 * *Code contributed*: [https://github.com[Functional code]] [https://github.com[Test code]] _{give links to collated code files}_
 
@@ -29,9 +37,6 @@ AddressBook - Level 4 is a desktop address book application used for teaching So
 ** Enhancements to existing features:
 *** Updated the GUI color scheme (Pull requests https://github.com[#33], https://github.com[#34])
 *** Wrote additional tests for existing features to increase coverage from 88% to 92% (Pull requests https://github.com[#36], https://github.com[#38])
-** Future Enhancement:
-*** Implement Google API to store the events in Google
-*** include::../DeveloperGuide.adoc[tag=undoredo]
 ** Documentation:
 *** Did cosmetic tweaks to existing contents of the User Guide: https://github.com[#14]
 ** Community:
@@ -62,7 +67,7 @@ include::../UserGuide.adoc[tag=dataencryption]
 |_Given below are sections I contributed to the Developer Guide. They showcase my ability to write technical documentation and the technical depth of my contributions to the project._
 |===
 
-include::../DeveloperGuide.adoc[tag=undoredo]
+include::../DeveloperGuide.adoc[tag=calendar]
 
 include::../DeveloperGuide.adoc[tag=dataencryption]
 

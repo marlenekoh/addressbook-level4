@@ -63,9 +63,7 @@ e.g. typing *`help`* and pressing kbd:[Enter] will open the help window.
 _NUSCouples_, you can type either `add n/John Doe` or `a n/John Doe`.
 * Words in `UPPER_CASE` are the parameters to be supplied by the user e.g. in `add n/NAME`, `NAME` is a
  parameter which can be used as `add n/John Doe`.
-* Items in square brackets are optional e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
-* Items with `…`​ after them can be used multiple times including zero times e.g. `[t/TAG]...` can
-be used as `{nbsp}` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+* Items in square brackets are optional e.g `n/NAME [p/PHONE_NUMBER]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
 * Parameters can be in any order e.g. if the command specifies `n/NAME p/PHONE_NUMBER`,
 `p/PHONE_NUMBER n/NAME` is also acceptable.
 ====
@@ -79,11 +77,10 @@ Alias: `hlp`
 ==== Adding your partner : `add`
 
 Adds your partner to _NUSCouples_. +
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS tt/TIMETABLE_URL [t/TAG]...` +
-Alias: `a n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS tt/TIMETABLE_URL [t/TAG]...`
+Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS tt/TIMETABLE_URL` +
+Alias: `a n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS tt/TIMETABLE_URL`
 
 ****
-* Your partner can have any number of tags (including 0).
 * The timetable url provided has to be a valid https://nusmods.com[NUSMods] short URL.
 * You can only have one partner in _NUSCouples_ at any one time.
 ****
@@ -91,25 +88,17 @@ Alias: `a n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS tt/TIMETABLE_URL [t/TAG]...`
 Examples:
 
 * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 tt/http://modsn.us/IO4n5`
-* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 tt/http://modsn.us/wNuIW t/criminal`
+* `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 tt/http://modsn.us/wNuIW`
 
 ==== Editing your partner : `edit`
 
-===== CURRENT IMPLEMENTATION
 Edits your existing partner in _NUSCouples_. +
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [tt/TIMETABLE_URL] [t/TAG]...` +
-Alias: `ed INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [tt/TIMETABLE_URL] [t/TAG]...`
-
-===== FUTURE IMPLEMENTATION [Coming in v1.5]
-Edits your existing partner in _NUSCouples_. +
-Format: `edit [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [tt/TIMETABLE_URL] [t/TAG]...` +
-Alias: `ed [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [tt/TIMETABLE_URL] [t/TAG]...`
+Format: `edit [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [tt/TIMETABLE_URL]` +
+Alias: `ed [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [tt/TIMETABLE_URL]`
 
 ****
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
-* When editing tags, the existing tags of your partner will be removed i.e adding of tags is not cumulative.
-* You can remove all tags of your partner by typing `t/` without specifying any tags after it.
 * Your partner must exist in _NUSCouples_ before this command can be executed.
 ****
 
@@ -117,17 +106,11 @@ Examples:
 
 * `edit p/91234567 e/johndoe@example.com` +
 Edits the phone number and email address of your partner to be `91234567` and `johndoe@example.com` respectively.
-* `edit n/Betsy Crower t/` +
-Edits the name of your partner to be `Betsy Crower` and clears all existing tags.
+* `edit n/Betsy Crower` +
+Edits the name of your partner to be `Betsy Crower`.
 
 ==== Deleting your partner : `delete`
 
-===== CURRENT IMPLEMENTATION
-Deletes your partner from _NUSCouples_. +
-Format: `delete INDEX` +
-Alias: `d INDEX`
-
-===== FUTURE IMPLEMENTATION [Coming in v1.5]
 Deletes your partner from _NUSCouples_. +
 Format: `delete` +
 Alias: `d`
@@ -226,6 +209,7 @@ Alias: `ex` +
 | [.small]#Return to <<toc,Table of Contents>># +
 |===
 
+// tag::timetable[]
 === Timetable
 
 ==== Adding your partner's timetable [Since v1.3]
@@ -242,13 +226,7 @@ Shows the current saved timetable of your partner. +
 Format: `select` +
 Alias: `s`
 
-===== CURRENT IMPLEMENTATION
-Only the timetable of the first person clicked will be loaded. This timetable will be shared among all persons.
-Timetable display will not be updated when editing timetable field. However, timetable link will be updated in the
-person card at the left.
-
-===== FUTURE IMPLEMENTATION [Coming in v1.5]
-NUSCouples will be modified to only hold one person. Timetable display will be updated after editing timetable field.
+Timetable display will be shown.
 
 ==== Comparing timetable : `tcompare` [Coming in v1.5]
 
@@ -265,6 +243,7 @@ Examples:
 
 * `tcompare tt/http://modsn.us/IO4n5` +
 * `tc tt/http://modsn.us/wNuIW` +
+// end::timetable[]
 
 |===
 | [.small]#Return to <<toc,Table of Contents>># +
@@ -347,10 +326,16 @@ _There is no alias for this feature currently._
 
 === Future Features
 // tag::dataencryption[]
+// tag::googleAPI[]
 ==== Encrypting data files `[coming in v2.0]`
 
 _{explain how the user can enable/disable data encryption}_
 // end::dataencryption[]
+
+==== Sync the calendar with Google API `[coming in v2.0]`
+
+_{explain how the user can authentic with google API and view and retrieve events from Google}_
+
 
 ==== Archiving journal entries `[coming in v2.0]`
 
@@ -411,10 +396,10 @@ and attach the log file that should be stored in the same location as the _NUSCo
 [width="100%",cols="10%,<20%,<35%,<35%",options="header",]
 |=======================================================================
 |Command |Description |Format| Example
-|add, a |Add your partner |`add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS tt/TIMETABLE_URL [t/TAG]...` |
+|add, a |Add your partner |`add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS tt/TIMETABLE_URL` |
 `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01 tt/http://modsn.us/IO4n5`
 
-|edit, ed |Edit your partner | `edit [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [tt/TIMETABLE_URL] [t/TAG]…` |
+|edit, ed |Edit your partner | `edit [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [tt/TIMETABLE_URL]` |
 `edit n/John Doe e/johnd@example.com`
 
 |delete, d |Delete your partner |`delete` |

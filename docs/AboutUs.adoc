@@ -22,6 +22,7 @@ Responsibilities: Model
 === Marlene Koh
 image::marlene.jpeg[width="150", align="left"]
 {empty}[https://github.com/marlenekoh[github]]
+{empty}[https://cs2103jan2018-t09-b4.github.io/main/team/marlenekoh.html[portfolio]]
 
 Role: Team Lead +
 Responsibilities: UI

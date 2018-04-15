@@ -1,4 +1,4 @@
-= John Doe - Project Portfolio
+= Chen Xing - Project Portfolio
 :imagesDir: ../images
 :stylesDir: ../stylesheets
 
@@ -22,13 +22,13 @@ It aims to help these couples create and remember new memories during their time
 ** Highlights: This enhancement does not affect existing commands and commands to be added in future. It required an in-depth analysis of design alternatives. The implementation too was challenging as it required changes to existing commands and external Calendar API.
 ** Credits: This features uses CalendarFx API interface, however the interface is in GUI so i manipulated commands to morph into a CLI calendar interface to fit into this project. _
 
-* *Minor enhancement*: added commands to the command box to ease the user by managing the caret to jump from last index to first index and vice versa.
+* *Minor enhancement*: added keystrokes to the command box to ease the user by managing the caret to jump from last index to first index and vice versa.
 
 * *Future enhancement*: will be implementing Google Calendar to sync the Calendar in the App currently.
 include::../userGuide.adoc[tag=googleAPI]
 
 
-* *Code contributed*: [https://github.com[Functional code]] [https://github.com[Test code]] _{give links to collated code files}_
+* *Code contributed*: [https://github.com/CS2103JAN2018-T09-B4/main/tree/master/collated/functional[Functional code]] [https://github.com/CS2103JAN2018-T09-B4/main/tree/master/collated/test[Test code]] _{give links to collated code files}_
 
 * *Other contributions*:
 
@@ -57,9 +57,11 @@ _{you can add/remove categories in the list above}_
 |_Given below are sections I contributed to the User Guide. They showcase my ability to write documentation targeting end-users._
 |===
 
-include::../UserGuide.adoc[tag=undoredo]
+include::../UserGuide.adoc[tag=CalendarCommands]
 
-include::../UserGuide.adoc[tag=dataencryption]
+include::../UserGuide.adoc[tag=googleAPI]
+
+include::../UserGuide.adoc[tag=CommandSummary]
 
 == Contributions to the Developer Guide
 
@@ -69,8 +71,15 @@ include::../UserGuide.adoc[tag=dataencryption]
 
 include::../DeveloperGuide.adoc[tag=calendar]
 
-include::../DeveloperGuide.adoc[tag=dataencryption]
+include::../DeveloperGuide.adoc[tag=viewCalendar]
 
+include::../DeveloperGuide.adoc[tag=addCalendar]
+
+include::../DeveloperGuide.adoc[tag=cancelCalendar]
+
+include::../DeveloperGuide.adoc[tag=Major-Minor]
+
+include::../DeveloperGuide.adoc[tag=UseCase]
 
 == PROJECT: PowerPointLabs
 

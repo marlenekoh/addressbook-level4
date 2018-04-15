@@ -35,7 +35,7 @@ public class XmlAdaptedPerson {
     @XmlElement(required = true)
     private String timetable;
     @XmlElement
-    private List<XmlAdaptedAppointment> appointments = new ArrayList<>();
+    private List<XmlAdaptedAppointment> appointments = new ArrayList<XmlAdaptedAppointment>();
 
     /**
      * Constructs an XmlAdaptedPerson.
@@ -146,6 +146,6 @@ public class XmlAdaptedPerson {
                 && Objects.equals(email, otherPerson.email)
                 && Objects.equals(address, otherPerson.address)
                 && Objects.equals(timetable, otherPerson.timetable)
-                && Objects.equals(appointments, otherPerson.appointments);
+                && appointments.equals(otherPerson.appointments);
     }
 }

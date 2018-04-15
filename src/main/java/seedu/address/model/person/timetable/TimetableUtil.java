@@ -95,7 +95,7 @@ public class TimetableUtil {
 
         HashMap<String, ArrayList<TimetableModuleSlot>> sortedModuleSlots =
                 TimetableUtil.sortModuleSlotsByDay(unsortedModuleSlots);
-        timetable.setListOfDays(sortedModuleSlots);
+        timetable.setDaysToTimetableModuleSlots(sortedModuleSlots);
 
         TimetableUtil.setTimetableDisplayInfo(timetable);
         return timetable;
@@ -112,7 +112,7 @@ public class TimetableUtil {
                 setUpUnsortedModuleSlotsForComparing(first, second);
         HashMap<String, ArrayList<TimetableModuleSlot>> sortedModuleSlots =
                 sortModuleSlotsByDay(unsortedModuleSlots);
-        second.setListOfDays(sortedModuleSlots);
+        second.setDaysToTimetableModuleSlots(sortedModuleSlots);
         setTimetableDisplayInfo(second);
         return second;
     }
@@ -179,7 +179,7 @@ public class TimetableUtil {
      */
     public static void setListOfModules(Timetable timetable) {
         HashMap<String, TimetableModule> listOfModules = splitExpandedUrl(timetable);
-        timetable.setListOfModules(listOfModules);
+        timetable.setModuleCodeToTimetableModule(listOfModules);
     }
 
     /**
@@ -226,12 +226,12 @@ public class TimetableUtil {
      * @param timetable timetable to set List of days
      */
     public static void setListOfDays(Timetable timetable) {
-        requireNonNull(timetable.getListOfModules());
+        requireNonNull(timetable.getModuleCodeToTimetableModule());
         ArrayList<TimetableModuleSlot> allTimetableModuleSlots = retrieveModuleSlotsFromApi(timetable);
         timetable.setAllModulesSlots(allTimetableModuleSlots);
         HashMap<String, ArrayList<TimetableModuleSlot>> sortedTimetableModuleSlots =
                 sortModuleSlotsByDay(allTimetableModuleSlots);
-        timetable.setListOfDays(sortedTimetableModuleSlots);
+        timetable.setDaysToTimetableModuleSlots(sortedTimetableModuleSlots);
     }
 
     /**
@@ -240,7 +240,7 @@ public class TimetableUtil {
      */
     public static void setTimetableDisplayInfo(Timetable timetable) {
         timetable.setTimetableDisplayInfo(formatTimetableDisplayInfo(
-                convertListOfDaysToString(timetable.getListOfDays())));
+                convertListOfDaysToString(timetable.getDaysToTimetableModuleSlots())));
     }
 
     /**
@@ -292,7 +292,7 @@ public class TimetableUtil {
     private static ArrayList<TimetableModuleSlot> retrieveModuleSlotsFromApi(Timetable timetable) {
         String currentModuleInfo;
         ArrayList<TimetableModuleSlot> allTimetableModuleSlots = new ArrayList<TimetableModuleSlot>();
-        Set<Map.Entry<String, TimetableModule>> entrySet = timetable.getListOfModules().entrySet();
+        Set<Map.Entry<String, TimetableModule>> entrySet = timetable.getModuleCodeToTimetableModule().entrySet();
         String acadYear = getAcadYear();
 
         for (Map.Entry<String, TimetableModule> currentModule : entrySet) {
@@ -381,7 +381,7 @@ public class TimetableUtil {
      */
     public static ArrayList<TimetableModuleSlot> getAllTimetableModuleSlots(String contents, Timetable timetable,
                                                                String moduleCode) {
-        requireNonNull(timetable.getListOfModules());
+        requireNonNull(timetable.getModuleCodeToTimetableModule());
 
         JSONObject jsonObject = null;
         JSONParser parser = new JSONParser();
@@ -402,7 +402,7 @@ public class TimetableUtil {
             String tempEndTime;
             String tempVenue;
 
-            HashMap<String, TimetableModule> listOfModules = timetable.getListOfModules();
+            HashMap<String, TimetableModule> listOfModules = timetable.getModuleCodeToTimetableModule();
             TimetableModule timetableModule = listOfModules.get(moduleCode);
             HashMap<String, String> listOfLessons = timetableModule.getListOfLessons();
 

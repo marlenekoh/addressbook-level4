@@ -143,7 +143,7 @@ public class AddCommandTest {
 
         @Override
         public void requestHideTimetable() {
-
+            fail("This method should not be called");
         }
 
         @Override

@@ -1,10 +1,9 @@
 package seedu.address.logic.commands;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static seedu.address.commons.core.Messages.MESSAGE_INVALID_PERSON;
 import static seedu.address.testutil.TypicalJournalEntries.getTypicalJournal;
 import static seedu.address.testutil.TypicalPersons.getTypicalPerson;
 
@@ -12,7 +11,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import seedu.address.commons.events.ui.ShowTimetableRequestEvent;
+import seedu.address.commons.events.ui.HideTimetableRequestEvent;
 import seedu.address.logic.CommandHistory;
 import seedu.address.logic.UndoRedoStack;
 import seedu.address.logic.commands.exceptions.CommandException;
@@ -23,9 +22,9 @@ import seedu.address.ui.testutil.EventsCollectorRule;
 
 //@@author marlenekoh
 /**
- * Contains integration tests (interaction with the Model) for {@code ShowTimetableCommand}.
+ * Contains integration tests (interaction with the Model) for {@code ShowCalendarCommand}.
  */
-public class ShowTimetableCommandTest {
+public class ShowCalendarCommandTest {
     @Rule
     public final EventsCollectorRule eventsCollectorRule = new EventsCollectorRule();
 
@@ -40,38 +39,38 @@ public class ShowTimetableCommandTest {
 
     @Test
     public void equals() {
-        ShowTimetableCommand showTimetableCommand = new ShowTimetableCommand();
+        ShowCalendarCommand showCalendarCommand = new ShowCalendarCommand();
 
         // different types -> returns false
-        assertFalse(showTimetableCommand.equals(1));
+        assertFalse(showCalendarCommand.equals(1));
 
         // null -> returns false
-        assertFalse(showTimetableCommand.equals(null));
+        assertFalse(showCalendarCommand.equals(null));
     }
 
     @Test
     public void execute_success() throws IllegalArgumentException {
-        ShowTimetableCommand showTimetableCommand = prepareCommand(withPartnerModel);
+        ShowCalendarCommand showCalendarCommand = prepareCommand(withPartnerModel);
 
         try {
-            CommandResult commandResult = showTimetableCommand.execute();
-            assertEquals(ShowTimetableCommand.MESSAGE_SELECT_PERSON_SUCCESS, commandResult.feedbackToUser);
+            CommandResult commandResult = showCalendarCommand.execute();
+            assertEquals(showCalendarCommand.MESSAGE_DESELECT_PERSON_SUCCESS, commandResult.feedbackToUser);
         } catch (CommandException ce) {
             throw new IllegalArgumentException("Execution of command should not fail.", ce);
         }
 
-        assertTrue(eventsCollectorRule.eventsCollector.getMostRecent() instanceof ShowTimetableRequestEvent);
+        assertTrue(eventsCollectorRule.eventsCollector.getMostRecent() instanceof HideTimetableRequestEvent);
     }
 
     @Test
     public void execute_failure() throws IllegalArgumentException {
-        ShowTimetableCommand showTimetableCommand = prepareCommand(noPartnerModel);
+        ShowCalendarCommand showCalendarCommand = prepareCommand(noPartnerModel);
 
         try {
-            showTimetableCommand.execute();
+            showCalendarCommand.execute();
             fail("The expected CommandException was not thrown.");
         } catch (CommandException ce) {
-            assertEquals(MESSAGE_INVALID_PERSON, ce.getMessage());
+            assertEquals(showCalendarCommand.MESSAGE_DESELECT_PERSON_FAILURE, ce.getMessage());
             assertTrue(eventsCollectorRule.eventsCollector.isEmpty());
         }
     }
@@ -79,9 +78,9 @@ public class ShowTimetableCommandTest {
     /**
      * Returns a {@code ShowTimetableCommand} with new CommandHistory and new UndoRedoStack.
      */
-    private ShowTimetableCommand prepareCommand(Model myModel) {
-        ShowTimetableCommand showTimetableCommand = new ShowTimetableCommand();
-        showTimetableCommand.setData(myModel, new CommandHistory(), new UndoRedoStack());
-        return showTimetableCommand;
+    private ShowCalendarCommand prepareCommand(Model myModel) {
+        ShowCalendarCommand showCalendarCommand = new ShowCalendarCommand();
+        showCalendarCommand.setData(myModel, new CommandHistory(), new UndoRedoStack());
+        return showCalendarCommand;
     }
 }

@@ -36,7 +36,7 @@ public interface Model {
     ObservableList <ReadOnlyPerson> getPersonAsList();
 
     //@@author
-    void deletePerson();
+    void deletePerson() throws NullPointerException;
 
     /** Adds the given person */
     void addPerson(ReadOnlyPerson person) throws DuplicatePersonException;

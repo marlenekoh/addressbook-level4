@@ -34,6 +34,8 @@ public class CommandTestUtil {
     public static final String VALID_ADDRESS_BOB = "Block 123, Bobby Street 3";
     public static final String VALID_TIMETABLE_AMY = "http://modsn.us/wNuIW";
     public static final String VALID_TIMETABLE_BOB = "http://modsn.us/q7cLP";
+    public static final String VALID_APPOINTMENT_AMY = "Lunch, tomorrow 5pm";
+    public static final String VALID_APPOINTMENT_BOB = "Lunch, tomorrow 5pm";
 
     public static final String NAME_DESC_AMY = " " + PREFIX_NAME + VALID_NAME_AMY;
     public static final String NAME_DESC_BOB = " " + PREFIX_NAME + VALID_NAME_BOB;
@@ -60,6 +62,7 @@ public class CommandTestUtil {
     public static final EditCommand.EditPersonDescriptor DESC_BOB;
 
     static {
+        //TODO: include appointments
         DESC_AMY = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
                 .withPhone(VALID_PHONE_AMY).withEmail(VALID_EMAIL_AMY).withAddress(VALID_ADDRESS_AMY)
                 .withTimetable(VALID_TIMETABLE_AMY).build();

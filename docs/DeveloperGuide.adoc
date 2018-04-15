@@ -440,8 +440,8 @@ Certain properties of the application can be controlled (e.g App name, logging l
 |===
 
 // tag::calendar[]
-=== [Proposed] Calendar Viewer Feature
-==== Current Implementation
+=== [Proposed] Calendar Google API Feature
+==== Proposed Implementation (Appearing in V2.0)
 The Calendar Viewer mechanism is facilitated by `Google Calendar API` and reside in the `ModelManager`.
 It supports viewing/add/editing/deleting capability that modifies the state of _NUSCouples_.
 Firstly, it uses OAuth 2.0 endpoints to allow users to share specific data with the application while keeping their usernames, passwords, and other information private. For example, an application can use OAuth 2.0 to obtain permission from users to store files in their Google Drives which sync to the calendar.
@@ -451,35 +451,46 @@ This implementation requires the user to connect to the internet because _NUSCou
 
 All applications follow a basic pattern when accessing a Google API using OAuth 2.0. At a high level, this are the four steps:
 
-1. Obtain OAuth 2.0 credentials from the Google API Console.
-Visit the Google API Console to obtain OAuth 2.0 credentials such as a client ID and client secret that are known to both Google and your application. The set of values varies based on what type of application you are building. For example, a JavaScript application does not require a secret, but a web server application does.
 
-2. Obtain an access token from the Google Authorization Server.
-Before your application can access private data using a Google API, it must obtain an access token that grants access to that API. A single access token can grant varying degrees of access to multiple APIs. A variable parameter called scope controls the set of resources and operations that an access token permits. During the access-token request, your application sends one or more values in the scope parameter.
-There are several ways to make this request, and they vary based on the type of application you are building. For example, a JavaScript application might request an access token using a browser redirect to Google, while an application installed on a device that has no browser uses web service requests.
-Some requests require an authentication step where the user logs in with their Google account. After logging in, the user is asked whether they are willing to grant the permissions that your application is requesting. This process is called user consent.
-If the user grants the permission, the Google Authorization Server sends your application an access token (or an authorization code that your application can use to obtain an access token). If the user does not grant the permission, the server returns an error.
-It is generally a best practice to request scopes incrementally, at the time access is required, rather than up front. For example, an app that wants to support purchases should not request Google Wallet access until the user presses the “buy” button; see Incremental authorization.
+|===
+|No. |Description
 
-3. Send the access token to an API.
-After an application obtains an access token, it sends the token to a Google API in an HTTP authorization header. It is possible to send tokens as URI query-string parameters, but we don't recommend it, because URI parameters can end up in log files that are not completely secure. Also, it is good REST practice to avoid creating unnecessary URI parameter names.
-Access tokens are valid only for the set of operations and resources described in the scope of the token request. For example, if an access token is issued for the Google+ API, it does not grant access to the Google Contacts API. You can, however, send that access token to the Google+ API multiple times for similar operations.
+|Step 1:
+|Obtain OAuth 2.0 credentials from the Google API Console.
+ Visit the Google API Console to obtain OAuth 2.0 credentials such as a client ID and client secret that are known to both Google and your application. The set of values varies based on what type of application you are building. For example, a JavaScript application does not require a secret, but a web server application does.
 
-4. Refresh the access token, if necessary.
-Access tokens have limited lifetimes. If your application needs access to a Google API beyond the lifetime of a single access token, it can obtain a refresh token. A refresh token allows your application to obtain new access tokens
+
+|Step 2:
+|Obtain an access token from the Google Authorization Server.
+ Before your application can access private data using a Google API, it must obtain an access token that grants access to that API. A single access token can grant varying degrees of access to multiple APIs. A variable parameter called scope controls the set of resources and operations that an access token permits. During the access-token request, your application sends one or more values in the scope parameter.
+ There are several ways to make this request, and they vary based on the type of application you are building. For example, a JavaScript application might request an access token using a browser redirect to Google, while an application installed on a device that has no browser uses web service requests.
+ Some requests require an authentication step where the user logs in with their Google account. After logging in, the user is asked whether they are willing to grant the permissions that your application is requesting. This process is called user consent.
+ If the user grants the permission, the Google Authorization Server sends your application an access token (or an authorization code that your application can use to obtain an access token). If the user does not grant the permission, the server returns an error.
+ It is generally a best practice to request scopes incrementally, at the time access is required, rather than up front. For example, an app that wants to support purchases should not request Google Wallet access until the user presses the “buy” button; see Incremental authorization.
+
+|Step 3:
+|After an application obtains an access token, it sends the token to a Google API in an HTTP authorization header. It is possible to send tokens as URI query-string parameters, but we don't recommend it, because URI parameters can end up in log files that are not completely secure. Also, it is good REST practice to avoid creating unnecessary URI parameter names.
+ Access tokens are valid only for the set of operations and resources described in the scope of the token request. For example, if an access token is issued for the Google+ API, it does not grant access to the Google Contacts API. You can, however, send that access token to the Google+ API multiple times for similar operations.
+
+|Step 4:
+|Refresh the access token, if necessary.
+ Access tokens have limited lifetimes. If your application needs access to a Google API beyond the lifetime of a single access token, it can obtain a refresh token. A refresh token allows your application to obtain new access tokens
+|===
+
 
 The sequence diagram below shows interactions within the `Logic` Component for Outh 2.0 endpoints:
 
 image::viewCalendarSeqDiagram.png[width="850"]
 
+
 ==== Design Considerations
-===== Aspect: Implementation of view Calendar feature
-* **Alternative 1 (current choice):** Display only current month event.
-** Pros: Easier to implement and Neater rather than displaying more than 1 mth.
-** Cons: Need to input cmd to filter through other month.
-* **Alternative 2:** Don't display any month until user defines.
-** Pros: More interaction.
-** Cons: The UI will be blank at initial stage which is ugly.
+===== Aspect: Implementation of Google Calendar feature
+* **Alternative 1 (current choice):** Data are not save locally.
+** Pros: User does not worry about getting data lost
+** Cons: User unable to retrieve the Calendar if internet is not connected
+* **Alternative 2:** Save Data locally
+** Pros: User does not worry their Calendar is unable to connected to Google.
+** Cons: The latest Calendar events might not have been synchronized.
 
 ===== Aspect: Using Open-source or proprietary Calendar API
 * **Alternative 1 (current choice):** Using Google API (open source)
@@ -492,6 +503,117 @@ image::viewCalendarSeqDiagram.png[width="850"]
 |===
 | [.small]#Return to <<toc,Table of Contents>># +
 |===
+
+// end::calendar[]
+
+//tag::viewCalendar[]
+
+=== Calendar Viewer feature
+==== Proposed Implementation
+
+The Calendar Viewer feature is implemented by 'BrowserPanel', which will reside in 'UI'.
+
+The idea of implementing this Calendar Viewer feature that sits ontop of Browser panel UI is to give the user a first look at the upcoming events first before going on to other features on the App.
+
+Users are able to select different views such as in Days, Weeks, Months or Years by adding a prefix 'c', 'w', 'm', 'y' after adding 'Cal' or 'Calendar' behind.
+
+This Calendar Interface is created and designed by CalendarFX. Through their GUI interface, i manipulate and massage the codes to allow user to enter commands to change the views since this is a CLI interface APP.
+
+The sequence diagram below shows interactions within the `Logic` Component for the `execute' API call.
+
+image::CalViewSeq.png[width="650"]
+
+==== Design Considerations
+===== Aspect: Implementation of Calendar View
+
+* **Alternative 1 (current choice):** Display only current month event.
+** Pros: Easier to implement and Neater rather than displaying more than 1 mth.
+** Cons: Need to input cmd to filter through other month.
+* **Alternative 2:** Don't display any month until user defines.
+** Pros: More interaction.
+** Cons: The UI will be blank at initial stage which is ugly.
+
+===== Aspect: Calendar View performance
+
+* **Alternative 1 (current choice):** Requires RAM of at least 6GB and above.
+** Pros: Faster retrieval and display the Calendar out
+** Cons: Need to buy more memory
+* **Alternative 2:** Don't display Year.
+** Pros: Reduce latency
+** Cons: User can't add event to next year
+
+// end::viewCalendar[]
+
+//tag::addCalendar[]
+
+=== Calendar Add Appointment feature
+==== Proposed Implementation
+
+The Calendar Add Appointment feature is implemented by 'Appointment', which will reside in 'Model'.
+
+The idea of implementing Add Appointment feature is to allow the user to add his/her event on the Calendar.
+
+The AppointmentList class holds an internal list that holds the Appointment class.
+Appointments are made up of 3 internal variables.
+
+image::AddAppointmentClass.png[width="300"]
+
+** Description: It Holds a string about the appointment. This String will be used to identify which Appointment.
+** Start Date: It Holds the starting time of the appointment. Used for sorting appointments and UI.
+** End Date: Holds the end time of the appointment. Used for UI.
+
+The sequence diagram below shows interactions within the `Model` Component for the `AddAppointment' API call.
+
+image::AddAppointmentSeq.png[width="650"]
+
+==== Design Considerations
+===== Aspect: Implementation of Add Event View
+
+* **Alternative 1 (current choice):** Display in Calendar UI.
+** Pros: Easier to implement and Neater.
+** Cons: Doesn't display all events listed on the partner.
+* **Alternative 2:** Create a List to display all events.
+** Pros: User can have an overview of all the events listed
+** Cons: The UI will be blank at initial stage which is ugly.
+
+===== Aspect: Allow duplicate events
+
+* **Alternative 1 (current choice):** On same time of the same day.
+** Pros: User can plan which one is more important to attend
+** Cons: Ambiguous as there are multiple similar events on the same time frame
+* **Alternative 2:** Restrict user to add same event on the same time frame.
+** Pros: More neat looking
+** Cons: User cant compare or manage well
+
+// end::addCalendar[]
+
+//tag::cancelCalendar[]
+
+=== Calendar Cancel Appointment feature
+==== Proposed Implementation
+
+The Calendar Cancel Appointment feature is implemented by 'Appointment', which will reside in 'Model'.
+
+The idea of implementing a Cancel Appointment feature is to allow the user to remove his/her event on the Calendar when needed.
+
+When the user calls to cancel an appointment in the Calendar, the model will ask AppointmentList to return a list of Appointments.
+However, the AppointmentList will only return a mutable copy of the AppointmentList back to the caller, as a practice of Defensive Programming.
+
+The sequence diagram below shows interactions within the `Model` Component for the `CancelAppointment' API call.
+
+image::CancelApptSeq.png[width="650"]
+
+==== Design Considerations
+===== Aspect: Implementation of Add Event View
+
+* **Alternative 1 (current choice):** Display in Calendar UI.
+** Pros: Easier to implement and Neater.
+** Cons: Have to cancel one by one and thus calendar will refresh over and over again.
+* **Alternative 2:** Create a List to display all events.
+** Pros: User can have an overview of all the events listed to cancel
+** Cons: The UI will be blank at initial stage which is ugly.
+
+// end::cancelCalendar[]
 
 //tag::timetable[]
 
@@ -740,9 +862,14 @@ b. Require developers to download those libraries manually (this creates extra w
 |===
 |Assignee |Major|Minor
 
+// tag::Major-Minor[]
+
 |Chen Xing
-|Scheduler: This app allows user to schedule/edit/delete/view planned meetings
-|Notifications: Allows user to receive notification about important dates from scheduled meetings
+|Scheduler: This app allows user to schedule//delete/view planned meetings
+|Accessibility: Reduce the effort when user enters command on the command box through custom keystrokes.
+|Tracker: The system will update the time on the footer to show when the changes have been made.
+
+// end::Major-Minor[]
 
 |Marlene
 |Timetable viewer: To help couples identify common breaks during school term so they can plan meetings during their free time
@@ -771,7 +898,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* * *` |pair of NUS students in a relationship |add/view my partner's NUS timetable for the week |keep track of my partner's free time
 
-|`* * *` |person in a relationship |add,edit,delete and view special events/ meetings (e.g. Valentine's day) in the same month |better plan for these dates
+|`* * *` |person in a relationship |View,Add and Delete special events/ meetings (e.g. Valentine's day) in the same month |better plan for these dates
 
 |`* * *` |person in a relationship |add/view Journal entries |remember special memories
 
@@ -783,7 +910,7 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`* *` |user |hide <<private-contact-detail,private contact details>> by default |minimize chance of someone else seeing them by accident
 
-|`* *` |partner |send a motivational picture via the app | keep their spirits up
+|`* *` |user |able to execute keystrokes to lighten their typing | keep their spirits up
 
 |`*` |user with many persons in the address book |sort persons by name |locate a person easily
 
@@ -791,11 +918,11 @@ Priorities: High (must have) - `* * \*`, Medium (nice to have) - `* \*`, Low (un
 
 |`*` |experienced user |have shortcut keys| do the same thing in a shorter time
 
-|`*` |user |receive notification of upcoming scheduled events| so i can get notified and prepare earlier
+|`*` |user |gets updated upon the changed of event| so he can be verified that changes has been made
 
 |=======================================================================
 
-
+// tag::UseCase[]
 
 [appendix]
 == Use Cases
@@ -836,8 +963,8 @@ Use case ends.
 
 *MSS*
 
-1.User inside browser panel enters the command to view calendar.
-2.NUSCouple redirects to google Calendar to retrieve data and display the UI accordingly.
+1.User inside browser panel enters the command to view calendar at different view(s).
+2.NUSCouples displays the Calendar
 
 +
 Use case ends.
@@ -845,21 +972,94 @@ Use case ends.
 *Extensions*
 
 [none]
-* 1a. The partner already has an existing google calendar hosted in google.
+* 1a. There is an existing user in NUSCouples.
 +
 [none]
-** 1a1. _NUSCouples_ redirects to google calendar account to authenticate using the user credential.
-** 1a2. User confirms change.
-** 1a3. _NUSCouples_ list the calendar in browser panel.
+** 1a1. _NUSCouples_ request to display Calendar of day/week/month/year from CalendarFX.
+** 1a2. _NUSCouples_ populate the calendar on the browser panel
+
 +
 Use case resumes at step 2.
 
-* 1b. The given credential is invalid.
+Use case ends.
+
+[discrete]
+=== Use case: Add Event on Calendar
+
+*MSS*
+
+1.User inside browser panel enters the command to add appointment.
+2.NUSCouples update the appointment list.
+3.NUSCouples displays the Calendar of all the events in the appointment list and update the change of event on the footer.
+
+Use case ends.
+
+*Extensions*
+
+[none]
+* 1a. User didn't specify date of event
 +
 [none]
-** 1b1. _NUSCouples_ shows an error message and close.
-+
+** 1a1. _NUSCouples_ shows an error
+
+[none]
+* 2a. NUSCouples add the new appointment into the list
+
 Use case ends.
+
+[discrete]
+=== Use case: Delete Event on Calendar
+
+*MSS*
+
+1.User inside browser panel enters the command to delete appointment.
+2.NUSCouples update the appointment list.
+3.NUSCouples displays the Calendar of all the events in the appointment list.
+
+Use case ends.
+
+*Extensions*
+
+[none]
+* 1a. User didn't specify date of event
++
+[none]
+** 1a1. _NUSCouples_ shows an error
+
+[none]
+* 2a. NUSCouples cannot find the appointment into the list
+[none]
+** 2a1. NUSCouples displays error message
+
+Use case ends.
+
+[discrete]
+=== Use case: Keyboard Accessibility
+
+*MSS*
+
+1.User enters a long command but want's to add something at the front or back
+2.User press Shift Ctrl (move cursor to the front) Shift Alt (move cursor to the back)
+
+Use case ends.
+
+*Extensions*
+
+[none]
+* 1a. User is using MAC
++
+[none]
+** 1a1. enter `option` key instead of `Alt` key
+
+[none]
+* 2a. User doesn't have keystroke Shift/Alt/Ctrl.
++
+[none]
+** 2a1. This feature can't be used
+
+Use case ends.
+
+// end::UseCase[]
 
 [discrete]
 === Use case: View Timetable of Partner
@@ -875,9 +1075,10 @@ Use case ends.
 
 [none]
 * 1a. The specified person does not have a timetable.
-+
-[none]
 ** 1a1. _NUSCouples_ shows an error message.
+[none]
+
+
 +
 Use case ends.
 
@@ -916,11 +1117,15 @@ Use case ends.
 .  Should have commands that are intuitive and easy to remember.
 .  Should be able to control almost everything from the CLI.
 .  The application should be connected to the internet.
+.  Should able to store <100 appointments
 
 [appendix]
 == Glossary
 [[mainstream-os]] Mainstream OS::
-Windows, Linux, Unix, OS-X, NUSMods, Google Calendar
+Windows, Linux, Unix, OS-X
+
+[[Third-Party-API]] Third-Party API::
+NUSMods, CalendarFX
 
 [[private-contact-detail]] Private contact detail::
 A contact detail that is not meant to be shared with others

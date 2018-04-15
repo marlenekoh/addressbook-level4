@@ -630,7 +630,7 @@ public class CommandBox extends UiPart<Region> {
      * Handles the Enter button pressed event.
      */
     @FXML
-    private void handleCommandInputChanged() {
+    private void handleCommandInputChanged() { //here
         try {
             CommandResult commandResult = logic.execute(commandTextField.getText());
             initHistory();

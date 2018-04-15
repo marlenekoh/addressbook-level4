@@ -123,7 +123,10 @@ public class ModelManager extends ComponentManager implements Model {
 
     //@@author
     @Override
-    public synchronized void deletePerson() {
+    public synchronized void deletePerson() throws NullPointerException {
+        if (partner == null) {
+            throw new NullPointerException();
+        }
         partner = updatePerson(null);
         indicatePersonChanged(partner);
         requestHideTimetable();

@@ -70,6 +70,7 @@ public class SampleDataUtil {
         return list;
     }
 
+    //@@author marlenekoh
     public static String getDefaultTimetablePageHtml() throws IOException {
         URL url = MainApp.class.getResource("/view/TimetablePage.html");
         return Resources.toString(url, Charsets.UTF_8);

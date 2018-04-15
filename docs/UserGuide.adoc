@@ -245,39 +245,82 @@ Examples:
 * `tc tt/http://modsn.us/wNuIW` +
 // end::timetable[]
 
+// tag::CalendarCommands[]
+
 |===
 | [.small]#Return to <<toc,Table of Contents>># +
 |===
 
 === Calendar
-==== Viewing current calendar : `cview` [Coming in v1.5]
+==== When you want to check which are the available dates you are free: `Calendar`
 
-View Google calendar. +
-Format: `cview` +
-Alias: `cv`
+View calendar. +
+Format: `calander` +
+Alias: `cal` +
 
-==== Adding new event to Google calendar : `cadd` [Coming in v1.5]
+Selecting Different Views +
+Day: `cal d` +
+Week: `cal w` +
+Month: `cal m` +
+Year: `cal y` +
 
-Adds new event to Google calendar. +
-Format: `cadd` +
-Alias: `ca`
+The image below shows a calendar view in day after you have entered `cal d`
+in the command box. From the calendar, you can see if there is any events on that day.
 
-==== Deleting event from Google calendar: `cdelete` [Coming in v1.5]
+image::CalendarView.png[width="650"]
+==== When you have a date with your partner then you decides to add the event to the Calendar after making sure that there are no clashes with your timetable nor schedules: `Appointment`
 
-Delete specified event from Google calendar. +
-Format: `cdelete` +
-Alias: `cd`
+Adds new event to calendar. +
+Format: `appointment` +
+Alias: `appt`
 
-==== Editing event on Google calendar : `cedit` [Coming in v1.5]
+Following the Format: +
+To add an event, Description and Time parameters are COMPULSORY fields that are required to enter. +
+To add Description and time - `d/ + Description, Time` +
 
-Edit event on Google calendar. +
-Format: `cedit` +
-Alias: `ce` +
+Example: `appointment d/Lunch, Next Monday 3pm` +
+
+The image below shows a calendar view in day after you have entered `appt 1 d/Checkup, tomorrow 10am to 12pm` event.
+As you can see, the event is nicely populated on the calendar after you have successfully created a new event!
+Moreover, this Calendar feature allows you to enter multiple events too!! And the footer will show the time when you make changes
+to the Calendar!! +
+
+image::CalendarAdd.png[width="650"]
+
+==== When your partner suddenly cannot make it on the scheduled event: `cancel`
+
+Delete specified event from calendar. +
+Format: `cancel` +
+Alias: Nil
+
+Following the Format: +
+To Cancel specified event: `Description with Person name` +
+Example: `cancel Lunch with John Doe` +
+
+The images below shows the before and after calendar view after you have executed the cancel appointment commands. +
+As you can see, after the commands are executed the footer will display the updated time as well and result panel will
+display `appointment canceled`. When there is no events on that day, the calendar will also display `no entries` too.
+
+Screenshot: Before +
+
+image::beforeCancelCal.png[width="650"]
+
+Screenshot: After +
+
+image::afterCancelCal.png[width="650"]
+
+==== Accessibility
+
+Unique KeyStrokes in NUSCouples. +
+Move Cursor to front: `Shift Ctrl` +
+Move Cursor to behind: `Shift Alt` +
+Move Cursor to behind (MAC USERS): `Shift Option` +
 
 |===
 | [.small]#Return to <<toc,Table of Contents>># +
 |===
 
+// end::CalendarCommands[]
 === Journal
 
 _NUSCouples_ provides you with a space to write, save and view journal entries. The list of saved journal entries will
@@ -326,17 +369,17 @@ _There is no alias for this feature currently._
 
 === Future Features
 // tag::dataencryption[]
-// tag::googleAPI[]
 ==== Encrypting data files `[coming in v2.0]`
 
 _{explain how the user can enable/disable data encryption}_
 // end::dataencryption[]
 
+// tag::googleAPI[]
 ==== Sync the calendar with Google API `[coming in v2.0]`
 
 _{explain how the user can authentic with google API and view and retrieve events from Google}_
 
-
+// end::googleAPI[]
 ==== Archiving journal entries `[coming in v2.0]`
 
 _{explain how the user can export old journal entries to another storage location in their computer}_
@@ -416,15 +459,17 @@ and attach the log file that should be stored in the same location as the _NUSCo
 
 |jnew, jn |Create/edit a journal entry |`jnew` |
 
-|cview, cv |Viewing your current calendar |`cview` |
+// tag::CommandSummary[]
 
-|cadd, ca |Adding a new event to your current calendar |`cadd` |
+|calendar, cal |Viewing your current calendar |`calendar` | cal w
 
-|cdelete, cd |Deleting an event from your current calendar |`cdelete` |
+|appointment, appt |Adding a new event to your current calendar |`appointment` | appt 1 d/Checkup, tomorrow 10am to 12pm
 
-|cedit, ce |Editing an event from your current calendar |`cedit` |
+|cancel |Deleting an event from your current calendar |`cancel` |
 
 |exit, ex |Exits _NUSCouples_ |`exit` |
+
+// end::CommandSummary[]
 
 |=======================================================================
 

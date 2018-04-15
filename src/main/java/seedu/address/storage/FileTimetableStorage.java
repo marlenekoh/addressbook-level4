@@ -20,30 +20,30 @@ public class FileTimetableStorage implements TimetableStorage {
 
     private String timetablePageHtmlPath;
     private String timetablePageCssPath;
-    private String timetableInfoFilePath;
+    private String timetableDisplayInfoFilePath;
 
     public FileTimetableStorage(String timetablePageHtmlPath, String timetablePageCssPath,
-                                String timetableInfoFilePath) {
+                                String timetableDisplayInfoFilePath) {
         this.timetablePageHtmlPath = timetablePageHtmlPath;
         this.timetablePageCssPath = timetablePageCssPath;
-        this.timetableInfoFilePath = timetableInfoFilePath;
+        this.timetableDisplayInfoFilePath = timetableDisplayInfoFilePath;
     }
 
     public String getTimetablePageHtmlPath() {
         return timetablePageHtmlPath;
     }
 
-    public String getTimetableInfoFilePath() {
-        return timetableInfoFilePath;
-    }
-
     public String getTimetablePageCssPath() {
         return timetablePageCssPath;
     }
 
+    public String getTimetableDisplayInfoFilePath() {
+        return timetableDisplayInfoFilePath;
+    }
+
     @Override
     public void setUpTimetableDisplayFiles(String toWrite) {
-        writeToFile(toWrite, timetableInfoFilePath);
+        writeToFile(toWrite, timetableDisplayInfoFilePath);
         createTimetablePageCssFile();
         setUpTimetablePageHtmlFile();
     }
@@ -62,8 +62,8 @@ public class FileTimetableStorage implements TimetableStorage {
         try {
             writeToFile(SampleDataUtil.getDefaultTimetablePageHtml(), timetablePageHtmlPath);
             String oldContent = getFileContents(timetablePageHtmlPath);
-            String toReplace = getFileContents(timetableInfoFilePath);
-            String newContent = replaceLine(oldContent, toReplace, "timetable", "];");
+            String toReplace = getFileContents(timetableDisplayInfoFilePath);
+            String newContent = replaceLineExcludingStartEnd(oldContent, toReplace, "timetable", "];");
             writeToFile(newContent, timetablePageHtmlPath);
         } catch (FileNotFoundException e) {
             logger.warning("File not found");
@@ -110,13 +110,13 @@ public class FileTimetableStorage implements TimetableStorage {
     }
 
     @Override
-    public String replaceLine(String contents, String replace, String startLine, String endLine) {
+    public String replaceLineExcludingStartEnd(String contents, String replace, String start, String end) {
         StringBuilder sb = new StringBuilder();
-        int startPos = contents.indexOf(startLine);
-        int endPos = contents.indexOf(endLine);
+        int startPos = contents.indexOf(start);
+        int endPos = contents.indexOf(end);
         sb.append(contents.substring(0, startPos));
         sb.append(replace);
-        sb.append(contents.substring(endPos + 2));
+        sb.append(contents.substring(endPos + end.length()));
         return sb.toString();
     }
 }

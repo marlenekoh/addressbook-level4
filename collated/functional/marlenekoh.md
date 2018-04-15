@@ -159,7 +159,7 @@ public class TimetableDisplayUtil {
         "2000", "2030", "2100", "2130", "2200", "2230", "2300", "2330"
     };
     public static final String[] WEEKS = {"Odd Week", "Even Week", "Every Week"};
-    private static String timetableInfoFilePath = "src/main/resources/timetableDisplayInfo";
+    private static String timetableDisplayInfoFilePath = "src/main/resources/timetableDisplayInfo";
     private static String timetablePageJsPath = "src/main/resources/view/TimetablePageScript.js";
     private static final Logger logger = LogsCenter.getLogger(MainApp.class);
 ```
@@ -200,7 +200,7 @@ public class TimetableDisplayUtil {
     public static void setUpTimetablePageScriptFile() {
         try {
             String oldContent = getFileContents(timetablePageJsPath);
-            String toReplace = getFileContents(timetableInfoFilePath);
+            String toReplace = getFileContents(timetableDisplayInfoFilePath);
             String newContent = replaceFirstLine(oldContent, toReplace);
             writeToTimetablePageScriptFile(newContent);
         } catch (FileNotFoundException e) {
@@ -214,7 +214,7 @@ public class TimetableDisplayUtil {
      * @param timetable the timetable to convert into string and write
      */
     public static void setUpTimetableDisplayInfoFile(Timetable timetable) {
-        File timetableDisplayInfo = new File(timetableInfoFilePath);
+        File timetableDisplayInfo = new File(timetableDisplayInfoFilePath);
         try {
             PrintWriter printWriter = new PrintWriter(timetableDisplayInfo);
             String toWrite = convertTimetableToString(timetable);
@@ -224,8 +224,8 @@ public class TimetableDisplayUtil {
         } catch (FileNotFoundException e) {
             logger.warning("File not found, creating new file");
             try {
-                timetableInfoFilePath = "data/timetableDisplayInfo";
-                timetableDisplayInfo = new File(timetableInfoFilePath);
+                timetableDisplayInfoFilePath = "data/timetableDisplayInfo";
+                timetableDisplayInfo = new File(timetableDisplayInfoFilePath);
                 timetableDisplayInfo.createNewFile();
                 setUpTimetableDisplayInfo(timetable);
             } catch (IOException ioe) {
@@ -235,11 +235,11 @@ public class TimetableDisplayUtil {
     }
 
     /**
-     * Writes a string to the file at {@code timetableInfoFilePath}
+     * Writes a string to the file at {@code timetableDisplayInfoFilePath}
      * @param toWrite the String to write
      */
     public static void setUpTimetableDisplayInfoFile(String toWrite) {
-        File timetableDisplayInfo = new File(timetableInfoFilePath);
+        File timetableDisplayInfo = new File(timetableDisplayInfoFilePath);
         try {
             PrintWriter printWriter = new PrintWriter(timetableDisplayInfo);
             printWriter.write(toWrite);
@@ -247,8 +247,8 @@ public class TimetableDisplayUtil {
         } catch (FileNotFoundException e) {
             logger.warning("File not found, creating new file");
             try {
-                timetableInfoFilePath = "data/timetableDisplayInfo";
-                timetableDisplayInfo = new File(timetableInfoFilePath);
+                timetableDisplayInfoFilePath = "data/timetableDisplayInfo";
+                timetableDisplayInfo = new File(timetableDisplayInfoFilePath);
                 timetableDisplayInfo.createNewFile();
                 setUpTimetableDisplayInfoFile(toWrite);
             } catch (IOException ioe) {
@@ -290,7 +290,7 @@ public class TimetableDisplayUtil {
     }
 
     /**
-     * Converts the {@code listOfDays} belonging to {@code timetable} into a String object for parsing
+     * Converts the {@code daysToTimetableModuleSlots} belonging to {@code timetable} into a String object for parsing
      * @param timetable which contains schedule to convert into JSON object
      */
     public static String convertTimetableToString(Timetable timetable) {
@@ -298,35 +298,35 @@ public class TimetableDisplayUtil {
     }
 
     /**
-     * Converts the {@code listOfDays} into a String object for parsing
-     * @param listOfDays ArrayLists of timetableModuleSlots sorted by time
+     * Converts the {@code daysToTimetableModuleSlots} into a String object for parsing
+     * @param daysToTimetableModuleSlots ArrayLists of timetableModuleSlots sorted by time
      */
-    public static String convertTimetableToString(HashMap<String, ArrayList<TimetableModuleSlot>> listOfDays) {
+    public static String convertTimetableToString(HashMap<String, ArrayList<TimetableModuleSlot>> daysToTimetableModuleSlots) {
         StringBuilder sb = new StringBuilder();
 
         ArrayList<TimetableModuleSlot> slotsForTheDay = null;
         for (int i = 0; i < TIMES.length; i++) {
             if (i < TIMES.length - 1) {
-                sb.append(listOfDays.get(DAYS[MONDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[MONDAY_INDEX].toUpperCase()).get(i).toString());
                 sb.append(", ");
-                sb.append(listOfDays.get(DAYS[TUESDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[TUESDAY_INDEX].toUpperCase()).get(i).toString());
                 sb.append(", ");
-                sb.append(listOfDays.get(DAYS[WEDNESDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[WEDNESDAY_INDEX].toUpperCase()).get(i).toString());
                 sb.append(", ");
-                sb.append(listOfDays.get(DAYS[THURSDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[THURSDAY_INDEX].toUpperCase()).get(i).toString());
                 sb.append(", ");
-                sb.append(listOfDays.get(DAYS[FRIDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[FRIDAY_INDEX].toUpperCase()).get(i).toString());
                 sb.append(", ");
             } else {
-                sb.append(listOfDays.get(DAYS[MONDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[MONDAY_INDEX].toUpperCase()).get(i).toString());
                 sb.append(", ");
-                sb.append(listOfDays.get(DAYS[TUESDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[TUESDAY_INDEX].toUpperCase()).get(i).toString());
                 sb.append(", ");
-                sb.append(listOfDays.get(DAYS[WEDNESDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[WEDNESDAY_INDEX].toUpperCase()).get(i).toString());
                 sb.append(", ");
-                sb.append(listOfDays.get(DAYS[THURSDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[THURSDAY_INDEX].toUpperCase()).get(i).toString());
                 sb.append(", ");
-                sb.append(listOfDays.get(DAYS[FRIDAY_INDEX].toUpperCase()).get(i).toString());
+                sb.append(daysToTimetableModuleSlots.get(DAYS[FRIDAY_INDEX].toUpperCase()).get(i).toString());
             }
         }
         sb.append("\n");
@@ -413,8 +413,8 @@ public class Timetable {
     public final String value;
     private int currentSemester;
     private HashMap<String, ArrayList<TimetableModuleSlot>>
-            listOfDays; // HashMap of <Day, Sorted list of TimetableModuleSlots>
-    private HashMap<String, TimetableModule> listOfModules; // HashMap of <module code, TimetableModule>
+            daysToTimetableModuleSlots; // HashMap of <Day, Sorted list of TimetableModuleSlots>
+    private HashMap<String, TimetableModule> moduleCodeToTimetableModule; // HashMap of <module code, TimetableModule>
     private ArrayList<TimetableModuleSlot> allModulesSlots; //ArrayList Containing all TimetableModuleSlots
     private String expandedUrl;
     private String timetableDisplayInfo;
@@ -436,12 +436,12 @@ public class Timetable {
         this.expandedUrl = expandedUrl;
     }
 
-    public void setListOfModules(HashMap<String, TimetableModule> listOfModules) {
-        this.listOfModules = listOfModules;
+    public void setListOfModules(HashMap<String, TimetableModule> moduleCodeToTimetableModule) {
+        this.moduleCodeToTimetableModule = moduleCodeToTimetableModule;
     }
 
     public HashMap<String, TimetableModule> getListOfModules() {
-        return listOfModules;
+        return moduleCodeToTimetableModule;
     }
 
     public int getCurrentSemester() {
@@ -452,12 +452,12 @@ public class Timetable {
         this.currentSemester = currentSemester;
     }
 
-    public void setListOfDays(HashMap<String, ArrayList<TimetableModuleSlot>> listOfDays) {
-        this.listOfDays = listOfDays;
+    public void setListOfDays(HashMap<String, ArrayList<TimetableModuleSlot>> daysToTimetableModuleSlots) {
+        this.daysToTimetableModuleSlots = daysToTimetableModuleSlots;
     }
 
     public HashMap<String, ArrayList<TimetableModuleSlot>> getListOfDays() {
-        return listOfDays;
+        return daysToTimetableModuleSlots;
     }
 
     public ArrayList<TimetableModuleSlot> getAllModulesSlots() {
@@ -595,12 +595,12 @@ public class TimetableParserUtil {
     }
 
     /**
-     * Sets listOfModules in {@code timetable}
+     * Sets moduleCodeToTimetableModule in {@code timetable}
      * @param timetable whose long url is to be split
      */
     public static void setListOfModules(Timetable timetable) {
-        HashMap<String, TimetableModule> listOfModules = splitExpandedUrl(timetable);
-        timetable.setListOfModules(listOfModules);
+        HashMap<String, TimetableModule> moduleCodeToTimetableModule = splitExpandedUrl(timetable);
+        timetable.setListOfModules(moduleCodeToTimetableModule);
     }
 
     /**
@@ -615,7 +615,7 @@ public class TimetableParserUtil {
         String[] moduleInformation = expandedUrl.split(SPLIT_QUESTION_MARK);
         String[] modules = moduleInformation[MODULE_INFORMATION_INDEX].split(SPLIT_AMPERSAND);
 
-        HashMap<String, TimetableModule> listOfModules = new  HashMap<String, TimetableModule>();
+        HashMap<String, TimetableModule> moduleCodeToTimetableModule = new  HashMap<String, TimetableModule>();
         HashMap<String, String> listOfLessons;
         String moduleCode;
         String lessonType;
@@ -637,13 +637,13 @@ public class TimetableParserUtil {
                     logger.warning("Unable to convert lesson type");
                 }
             }
-            listOfModules.put(moduleCode, new TimetableModule(moduleCode, listOfLessons));
+            moduleCodeToTimetableModule.put(moduleCode, new TimetableModule(moduleCode, listOfLessons));
         }
-        return listOfModules;
+        return moduleCodeToTimetableModule;
     }
 
     /**
-     * Sets {@code listOfDays} in {@code timetable} given
+     * Sets {@code daysToTimetableModuleSlots} in {@code timetable} given
      * @param timetable timetable to set List of days
      */
     public static void setListOfDays(Timetable timetable) {
@@ -656,7 +656,7 @@ public class TimetableParserUtil {
     }
 
     /**
-     * Gets module information from nusmods api for the all modules in listOfModules in {@code timetable}
+     * Gets module information from nusmods api for the all modules in moduleCodeToTimetableModule in {@code timetable}
      * @param timetable containing list of all modules
      */
     private static ArrayList<TimetableModuleSlot> retrieveModuleSlotsFromApi(Timetable timetable) {
@@ -756,8 +756,8 @@ public class TimetableParserUtil {
             String tempEndTime;
             String tempVenue;
 
-            HashMap<String, TimetableModule> listOfModules = timetable.getListOfModules();
-            TimetableModule timetableModule = listOfModules.get(moduleCode);
+            HashMap<String, TimetableModule> moduleCodeToTimetableModule = timetable.getListOfModules();
+            TimetableModule timetableModule = moduleCodeToTimetableModule.get(moduleCode);
             HashMap<String, String> listOfLessons = timetableModule.getListOfLessons();
 
             for (Object t : arrOfClassInformation) {
@@ -786,24 +786,24 @@ public class TimetableParserUtil {
      */
     public static HashMap<String, ArrayList<TimetableModuleSlot>> sortModuleSlotsByDay(
             ArrayList<TimetableModuleSlot> unsortedTimetableModuleSlots) {
-        ArrayList<ArrayList<TimetableModuleSlot>> listOfDays = new ArrayList<ArrayList<TimetableModuleSlot>>();
+        ArrayList<ArrayList<TimetableModuleSlot>> daysToTimetableModuleSlots = new ArrayList<ArrayList<TimetableModuleSlot>>();
 
         // add ArrayList for Monday to Friday
-        listOfDays.add(new ArrayList<TimetableModuleSlot>());
-        listOfDays.add(new ArrayList<TimetableModuleSlot>());
-        listOfDays.add(new ArrayList<TimetableModuleSlot>());
-        listOfDays.add(new ArrayList<TimetableModuleSlot>());
-        listOfDays.add(new ArrayList<TimetableModuleSlot>());
+        daysToTimetableModuleSlots.add(new ArrayList<TimetableModuleSlot>());
+        daysToTimetableModuleSlots.add(new ArrayList<TimetableModuleSlot>());
+        daysToTimetableModuleSlots.add(new ArrayList<TimetableModuleSlot>());
+        daysToTimetableModuleSlots.add(new ArrayList<TimetableModuleSlot>());
+        daysToTimetableModuleSlots.add(new ArrayList<TimetableModuleSlot>());
 
         for (TimetableModuleSlot t : unsortedTimetableModuleSlots) {
             try {
-                listOfDays.get(convertDayToInteger(t.getDay())).add(t);
+                daysToTimetableModuleSlots.get(convertDayToInteger(t.getDay())).add(t);
             } catch (IllegalValueException e) {
                 logger.warning("Invalid day entered");
             }
         }
 
-        for (ArrayList<TimetableModuleSlot> t : listOfDays) {
+        for (ArrayList<TimetableModuleSlot> t : daysToTimetableModuleSlots) {
             ArrayList<TimetableModuleSlot> temp = sortModuleSlotsByTime(t);
             t.clear();
             t.addAll(temp);
@@ -811,11 +811,11 @@ public class TimetableParserUtil {
 
         HashMap<String, ArrayList<TimetableModuleSlot>> sortedTimetableModuleSlots =
                 new HashMap<String, ArrayList<TimetableModuleSlot>>();
-        sortedTimetableModuleSlots.put("MONDAY", listOfDays.get(MONDAY_INDEX));
-        sortedTimetableModuleSlots.put("TUESDAY", listOfDays.get(TUESDAY_INDEX));
-        sortedTimetableModuleSlots.put("WEDNESDAY", listOfDays.get(WEDNESDAY_INDEX));
-        sortedTimetableModuleSlots.put("THURSDAY", listOfDays.get(THURSDAY_INDEX));
-        sortedTimetableModuleSlots.put("FRIDAY", listOfDays.get(FRIDAY_INDEX));
+        sortedTimetableModuleSlots.put("MONDAY", daysToTimetableModuleSlots.get(MONDAY_INDEX));
+        sortedTimetableModuleSlots.put("TUESDAY", daysToTimetableModuleSlots.get(TUESDAY_INDEX));
+        sortedTimetableModuleSlots.put("WEDNESDAY", daysToTimetableModuleSlots.get(WEDNESDAY_INDEX));
+        sortedTimetableModuleSlots.put("THURSDAY", daysToTimetableModuleSlots.get(THURSDAY_INDEX));
+        sortedTimetableModuleSlots.put("FRIDAY", daysToTimetableModuleSlots.get(FRIDAY_INDEX));
         return sortedTimetableModuleSlots;
     }
 

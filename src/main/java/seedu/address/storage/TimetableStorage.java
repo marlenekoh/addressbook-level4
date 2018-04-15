@@ -38,12 +38,12 @@ public interface TimetableStorage {
     String getFileContents(String path) throws FileNotFoundException;
 
     /**
-     * Replaces one line of {@code contents} with {@code replace}
+     * Replaces some text of {@code contents} with {@code replace}
      * @param contents original content of the javascript file
-     * @param replace new line
-     * @param startLine of line to replace
-     * @param endLine of line to replace
+     * @param replace new text
+     * @param start of text in {@code contents} to replace (exclusive)
+     * @param end of text in {@code contents} to replace (exclusive)
      * @return new content
      */
-    String replaceLine(String contents, String replace, String startLine, String endLine);
+    String replaceLineExcludingStartEnd(String contents, String replace, String start, String end);
 }

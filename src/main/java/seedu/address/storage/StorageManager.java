@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 import com.google.common.eventbus.Subscribe;
 
 import seedu.address.commons.core.ComponentManager;
-import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.JournalChangedEvent;
 import seedu.address.commons.events.model.PersonChangedEvent;
@@ -174,14 +173,14 @@ public class StorageManager extends ComponentManager implements Storage {
     }
 
     @Override
-    public String replaceLine(String contents, String replace, String startIndex, String endIndex) {
-        return timetableStorage.replaceLine(contents, replace, startIndex, endIndex);
+    public String replaceLineExcludingStartEnd(String contents, String replace, String start, String end) {
+        return timetableStorage.replaceLineExcludingStartEnd(contents, replace, start, end);
     }
 
     @Subscribe
     public void handleTimetableChangedEvent(TimetableChangedEvent event) {
         setUpTimetableDisplayFiles(event.timetable.getTimetableDisplayInfo());
         setUpTimetablePageHtmlFile();
-        EventsCenter.getInstance().post(new ShowTimetableRequestEvent());
+        raise(new ShowTimetableRequestEvent());
     }
 }

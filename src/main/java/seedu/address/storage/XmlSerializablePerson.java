@@ -1,5 +1,7 @@
 package seedu.address.storage;
 
+import static seedu.address.model.person.Person.PARTNER_INDEX;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 
@@ -42,7 +44,7 @@ public class XmlSerializablePerson {
      * {@code XmlAdaptedPerson} or {@code XmlAdaptedTag}.
      */
     public Person toModelType() throws IllegalValueException, ParseException {
-        return persons.get(0).toModelType();
+        return persons.get(PARTNER_INDEX).toModelType();
     }
 
     public int getSize() {
@@ -61,7 +63,7 @@ public class XmlSerializablePerson {
 
         XmlSerializablePerson xsp = (XmlSerializablePerson) other;
         if (persons.size() != 0) {
-            return persons.get(0).equals(xsp.persons.get(0));
+            return persons.get(PARTNER_INDEX).equals(xsp.persons.get(PARTNER_INDEX));
         } else {
             return persons.size() == (xsp.persons.size());
         }

@@ -1,5 +1,6 @@
 package seedu.address.model.person.timetable;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -38,5 +39,41 @@ public class TimetableTest {
         // valid timetables
         assertTrue(Timetable.isValidTimetable("http://modsn.us/wNuIW"));
         assertTrue(Timetable.isValidTimetable("http://modsn.us/q7cLP")); // code-part can be alphanumeric
+    }
+
+    @Test
+    public void  equals_assertsTrue() {
+        Timetable timetable = new Timetable("http://modsn.us/wNuIW");
+        Timetable timetableCopy = new Timetable("http://modsn.us/wNuIW");
+
+        // same short NUSMods URL -> returns true
+        assertTrue(timetable.equals(timetableCopy));
+
+        // same object -> returns true
+        assertTrue(timetable.equals(timetable));
+
+        // different attributes other than value -> returns true
+        // different timetableDisplayInfo, different listOfDays
+        timetableCopy = TimetableUtil.setUpTimetableInfoCompare(timetable, timetableCopy);
+        assertTrue(timetable.equals(timetableCopy));
+    }
+
+    @Test
+    public void  equals_assertsFalse() {
+        Timetable timetable = new Timetable("http://modsn.us/wNuIW");
+        Timetable differentTimetable = new Timetable("http://modsn.us/q7cLP");
+
+        // null -> returns false
+        assertFalse(timetable.equals(null));
+
+        // different short NUSMods URL -> returns false
+        assertFalse(timetable.equals(differentTimetable));
+    }
+
+    @Test
+    public void toString_assertEquals() {
+        Timetable timetable = new Timetable("http://modsn.us/wNuIW");
+        assertEquals("http://modsn.us/wNuIW", timetable.value);
+
     }
 }

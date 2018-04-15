@@ -1,5 +1,7 @@
 package seedu.address.ui;
 
+import static javafx.scene.input.KeyCode.TAB;
+
 import java.util.logging.Logger;
 
 import com.calendarfx.view.CalendarView;
@@ -21,7 +23,6 @@ import seedu.address.commons.core.GuiSettings;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.ExitAppRequestEvent;
 import seedu.address.commons.events.ui.HideTimetableRequestEvent;
-import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
 import seedu.address.commons.events.ui.ShowHelpRequestEvent;
 import seedu.address.commons.events.ui.ShowTimetableRequestEvent;
 import seedu.address.logic.Logic;
@@ -44,7 +45,10 @@ public class MainWindow extends UiPart<Region> {
     // Independent Ui parts residing in this Ui container
     private CalendarView calendarView;
     private BrowserPanel browserPanel;
+    private ResultDisplay resultDisplay;
     private ListPanel listPanel;
+    private CommandBox commandBox;
+    private StatusBarFooter statusBarFooter;
     private Config config;
     private UserPrefs prefs;
 
@@ -128,19 +132,20 @@ public class MainWindow extends UiPart<Region> {
      * Fills up all the placeholders of this window.
      */
     void fillInnerParts() {
-        browserPanel = new BrowserPanel(logic.getFilteredPersonList());
+        browserPlaceholder.getChildren().clear();
+        browserPanel = new BrowserPanel(logic.getPartner());
         browserPlaceholder.getChildren().add(browserPanel.getCalendarRoot());
 
-        listPanel = new ListPanel(logic.getFilteredPersonList(), logic.getJournalEntryList());
+        listPanel = new ListPanel(logic.getPersonAsList(), logic.getJournalEntryList());
         listPanelPlaceholder.getChildren().add(listPanel.getRoot());
 
-        ResultDisplay resultDisplay = new ResultDisplay();
+        resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
 
-        StatusBarFooter statusBarFooter = new StatusBarFooter(prefs.getAddressBookFilePath());
+        statusBarFooter = new StatusBarFooter(prefs.getPersonFilePath());
         statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
 
-        CommandBox commandBox = new CommandBox(logic);
+        commandBox = new CommandBox(logic);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
 
         Platform.runLater(() -> commandBox.getCommandTextField().requestFocus());
@@ -193,7 +198,9 @@ public class MainWindow extends UiPart<Region> {
      */
     public void handleShowTimetable() {
         browserPanel.loadTimetablePage();
-        browserPlaceholder.getChildren().add(browserPanel.getRoot());
+        if (!browserPlaceholder.getChildren().contains(browserPanel.getRoot())) {
+            browserPlaceholder.getChildren().add(browserPanel.getRoot());
+        }
     }
 
     /**
@@ -215,6 +222,22 @@ public class MainWindow extends UiPart<Region> {
     @FXML
     private void handleExit() {
         raise(new ExitAppRequestEvent());
+    }
+
+    /**
+     * Handles the key press event, {@code keyEvent}.
+     */
+    @FXML
+    private void handleKeyPress(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == TAB) {
+            keyEvent.consume();
+            commandBoxRequestFocus();
+        }
+
+    }
+
+    void commandBoxRequestFocus() {
+        this.commandBox.getCommandTextField().requestFocus();
     }
 
     public ListPanel getPersonListPanel() {
@@ -242,11 +265,5 @@ public class MainWindow extends UiPart<Region> {
     private void handleHideTimetableRequestEvent(HideTimetableRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         handleHideTimetable();
-    }
-
-    @Subscribe
-    private void handlePersonPanelSelectionChangedEvent(PersonPanelSelectionChangedEvent event) {
-        logger.info(LogsCenter.getEventHandlingLogMessage(event));
-        handleShowTimetable();
     }
 }

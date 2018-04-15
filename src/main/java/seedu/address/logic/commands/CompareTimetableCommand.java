@@ -1,18 +1,13 @@
 package seedu.address.logic.commands;
 
+import static java.util.Objects.requireNonNull;
+import static seedu.address.commons.core.Messages.MESSAGE_INVALID_PERSON;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TIMETABLE;
-import static seedu.address.model.person.Person.PARTNER_INDEX;
 
-import java.util.List;
-
-import seedu.address.commons.core.EventsCenter;
-import seedu.address.commons.core.index.Index;
-import seedu.address.commons.events.ui.JumpToListRequestEvent;
-import seedu.address.commons.events.ui.ShowTimetableRequestEvent;
-import seedu.address.model.person.Person;
+import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.model.person.timetable.Timetable;
-import seedu.address.model.person.timetable.TimetableComparatorUtil;
+import seedu.address.model.person.timetable.TimetableUtil;
 
 /**
  * Compares the partner's timetable with a given timetable
@@ -29,6 +24,7 @@ public class CompareTimetableCommand extends Command {
 
     public static final String MESSAGE_TIMETABLE_COMPARE_SUCCESS = "Compared timetable";
 
+    private ReadOnlyPerson partner;
     private Timetable otherTimetable;
 
     public CompareTimetableCommand(Timetable otherTimetable) {
@@ -36,14 +32,17 @@ public class CompareTimetableCommand extends Command {
     }
 
     @Override
-    public CommandResult execute() {
-        List<ReadOnlyPerson> lastShownList = model.getFilteredPersonList();
-        ReadOnlyPerson readOnlyPartner = lastShownList.get(PARTNER_INDEX);
-        Person partner = new Person(readOnlyPartner);
-        TimetableComparatorUtil.compareTimetable(partner.getTimetable(), otherTimetable);
+    public CommandResult execute() throws CommandException {
+        try {
+            partner = model.getPartner();
+        } catch (NullPointerException npe) {
+            throw new CommandException(MESSAGE_INVALID_PERSON);
+        }
+        requireNonNull(otherTimetable);
+        otherTimetable = TimetableUtil.setUpTimetableInfoCompare(partner.getTimetable(), otherTimetable);
 
-        EventsCenter.getInstance().post(new ShowTimetableRequestEvent());
-        EventsCenter.getInstance().post(new JumpToListRequestEvent(Index.fromZeroBased(PARTNER_INDEX)));
+        model.indicateTimetableChanged(otherTimetable);
+        model.requestShowTimetable();
         return new CommandResult(MESSAGE_TIMETABLE_COMPARE_SUCCESS);
     }
 

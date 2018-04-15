@@ -45,7 +45,7 @@ public class AppointmentSystemTest extends AddressBookSystemTest {
     /**
      * Performs verification that the expected model is the same after command is executing
 
-    private void assertCommandSuccess(String command, ReadOnlyPerson toAdd, Appointment appointment) {
+    private void assertCommandSuccess(String command, ReadOnlyPerson toAdd, appointment appointment) {
         Model expectedModel = getModel();
         String expectedResultMessage;
 
@@ -69,7 +69,7 @@ public class AppointmentSystemTest extends AddressBookSystemTest {
      * display box displays {@code expectedResultMessage} and the model related components equal to
      * {@code expectedModel}.
      *
-     * //@see AppointmentSystemTest#assertCommandSuccess(String, ReadOnlyPerson, Appointment)
+     * //@see AppointmentSystemTest#assertCommandSuccess(String, ReadOnlyPerson, appointment)
      */
     private void assertCommandSuccess(String command, Model expectedModel, String expectedResultMessage) {
         executeCommand(command);

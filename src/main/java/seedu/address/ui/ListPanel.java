@@ -19,6 +19,7 @@ import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.ui.HideTimetableRequestEvent;
 import seedu.address.commons.events.ui.JumpToListRequestEvent;
 import seedu.address.commons.events.ui.PersonPanelSelectionChangedEvent;
+import seedu.address.commons.events.ui.ShowTimetableRequestEvent;
 import seedu.address.model.journalentry.JournalEntry;
 import seedu.address.model.person.ReadOnlyPerson;
 
@@ -42,7 +43,7 @@ public class ListPanel extends UiPart<Region> {
     }
 
     private void setConnections(
-              ObservableList<ReadOnlyPerson> personList, ObservableList<JournalEntry> journalEntryList) {
+            ObservableList<ReadOnlyPerson> personList, ObservableList<JournalEntry> journalEntryList) {
         ObservableList<PersonCard> mappedList = EasyBind.map(
                 personList, person -> new PersonCard(person, personList.indexOf(person) + 1));
 
@@ -61,6 +62,9 @@ public class ListPanel extends UiPart<Region> {
                     if (newValue != null) {
                         logger.fine("Selection in person list panel changed to : '" + newValue + "'");
                         raise(new PersonPanelSelectionChangedEvent(newValue));
+                    } else {
+                        logger.fine("Deselecting partner");
+                        raise(new HideTimetableRequestEvent());
                     }
                 });
     }
@@ -84,18 +88,26 @@ public class ListPanel extends UiPart<Region> {
     /**
      * Deselects the {@code PersonCard} at the {@code index}.
      */
-    private void deselect(int index) {
+    private void deselect() {
         Platform.runLater(() -> {
             personListView.getSelectionModel().clearSelection();
         });
     }
 
+    //@@author marlenekoh
+    @Subscribe
+    private void handleShowTimetableRequestEvent (ShowTimetableRequestEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+        scrollTo(PARTNER_INDEX);
+    }
+
     @Subscribe
     private void handleHideTimetableRequestEvent (HideTimetableRequestEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
-        deselect(PARTNER_INDEX);
+        deselect();
     }
 
+    //@@author
     /**
      * Custom {@code ListCell} that displays the graphics of a {@code PersonCard}.
      */
@@ -114,6 +126,7 @@ public class ListPanel extends UiPart<Region> {
         }
     }
 
+    //@@author traceurgan
     /**
      * Custom {@code ListCell} that displays the graphics of a {@code PersonCard}.
      */

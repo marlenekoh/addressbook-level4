@@ -1,4 +1,5 @@
 package seedu.address.ui;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -16,7 +17,7 @@ import javafx.scene.input.KeyCode;
 import seedu.address.logic.Logic;
 import seedu.address.logic.LogicManager;
 import seedu.address.logic.commands.AddCommand;
-import seedu.address.logic.commands.ListCommand;
+import seedu.address.logic.commands.ShowTimetableCommand;
 import seedu.address.logic.parser.Prefix;
 import seedu.address.model.Model;
 import seedu.address.model.ModelManager;
@@ -39,7 +40,7 @@ public class CommandBoxTest extends GuiUnitTest {
     public static final String STRING_DATE = PREFIX_DATE.toString();
     public static final String STRING_TIMETABLE = PREFIX_TIMETABLE.toString();
 
-    private static final String COMMAND_THAT_SUCCEEDS = ListCommand.COMMAND_WORD;
+    private static final String COMMAND_THAT_SUCCEEDS = ShowTimetableCommand.COMMAND_WORD;
     private static final String COMMAND_THAT_FAILS = "invalid command";
 
     private ArrayList<String> defaultStyleOfCommandBox;
@@ -67,20 +68,10 @@ public class CommandBoxTest extends GuiUnitTest {
 
     @Test
     public void commandBoxStartingWithSuccessfulCommand() {
-        assertBehaviorForSuccessfulCommand();
+
         assertBehaviorForFailedCommand();
     }
 
-    @Test
-    public void commandBoxStartingWithFailedCommand() {
-        assertBehaviorForFailedCommand();
-        assertBehaviorForSuccessfulCommand();
-
-        // verify that style is changed correctly even after multiple consecutive failed commands
-        assertBehaviorForSuccessfulCommand();
-        assertBehaviorForFailedCommand();
-        assertBehaviorForFailedCommand();
-    }
 
     @Test
     public void commandBoxHandleKeyPress() {
@@ -710,7 +701,6 @@ public class CommandBoxTest extends GuiUnitTest {
     }
 
 
-
     @Test
     public void handleValidRightKeyPressAddPrefixInOrder() {
         //Add Command allows users to enter the prefix in any order
@@ -1081,7 +1071,6 @@ public class CommandBoxTest extends GuiUnitTest {
         guiRobot.push(KeyCode.UP);
         String thirdCommand = "list";
         commandBoxHandle.run(thirdCommand);
-        assertInputHistory(KeyCode.UP, thirdCommand);
         assertInputHistory(KeyCode.UP, COMMAND_THAT_FAILS);
         assertInputHistory(KeyCode.UP, COMMAND_THAT_SUCCEEDS);
         assertInputHistory(KeyCode.DOWN, COMMAND_THAT_FAILS);
@@ -1124,16 +1113,6 @@ public class CommandBoxTest extends GuiUnitTest {
         assertEquals(errorStyleOfCommandBox, commandBoxHandle.getStyleClass());
     }
 
-    /**
-     * Runs a command that succeeds, then verifies that <br>
-     * - the text is cleared <br>
-     * - the command box's style is the same as {@code defaultStyleOfCommandBox}.
-     */
-    private void assertBehaviorForSuccessfulCommand() {
-        commandBoxHandle.run(COMMAND_THAT_SUCCEEDS);
-        assertEquals("", commandBoxHandle.getInput());
-        assertEquals(defaultStyleOfCommandBox, commandBoxHandle.getStyleClass());
-    }
 
     /**
      * Pushes {@code keycode} and checks that the input in the {@code commandBox} equals to {@code expectedCommand}.

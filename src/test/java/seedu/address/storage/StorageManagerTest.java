@@ -3,6 +3,8 @@ package seedu.address.storage;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static seedu.address.testutil.TypicalPersons.ALICE;
+import static seedu.address.testutil.TypicalPersons.getTypicalPerson;
 
 import java.io.IOException;
 
@@ -11,11 +13,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.commons.events.model.JournalChangedEvent;
+import seedu.address.commons.events.model.PersonChangedEvent;
 import seedu.address.commons.events.storage.DataSavingExceptionEvent;
-import seedu.address.model.AddressBook;
-import seedu.address.model.ReadOnlyAddressBook;
+import seedu.address.model.Journal;
+import seedu.address.model.ReadOnlyJournal;
 import seedu.address.model.UserPrefs;
+import seedu.address.model.person.Person;
+import seedu.address.model.person.ReadOnlyPerson;
 import seedu.address.ui.testutil.EventsCollectorRule;
 
 public class StorageManagerTest {
@@ -29,10 +34,12 @@ public class StorageManagerTest {
 
     @Before
     public void setUp() {
-        XmlAddressBookStorage addressBookStorage = new XmlAddressBookStorage(getTempFilePath("ab"));
+        XmlPersonStorage personStorage = new XmlPersonStorage(getTempFilePath("p"));
         XmlJournalStorage journalStorage = new XmlJournalStorage(getTempFilePath("j"));
         JsonUserPrefsStorage userPrefsStorage = new JsonUserPrefsStorage(getTempFilePath("prefs"));
-        storageManager = new StorageManager(addressBookStorage, journalStorage, userPrefsStorage);
+        FileTimetableStorage timetableStorage = new FileTimetableStorage(getTempFilePath("1"),
+                getTempFilePath("2"), getTempFilePath("3"));
+        storageManager = new StorageManager(personStorage, journalStorage, userPrefsStorage, timetableStorage);
     }
 
     private String getTempFilePath(String fileName) {
@@ -53,31 +60,45 @@ public class StorageManagerTest {
         UserPrefs retrieved = storageManager.readUserPrefs().get();
         assertEquals(original, retrieved);
     }
-    /**
+
     @Test
-    public void addressBookReadSave() throws Exception {
+    public void personReadSave() throws Exception {
         /*
          * Note: This is an integration test that verifies the StorageManager is properly wired to the
-         * {@link XmlAddressBookStorage} class.
+         * {@link XmlPersonStorage} class.
          * More extensive testing of UserPref saving/reading is done in {@link XmlAddressBookStorageTest} class.
+         */
+        Person original = getTypicalPerson();
 
-        AddressBook original = getTypicalAddressBook();
-        storageManager.saveAddressBook(original);
-        ReadOnlyAddressBook retrieved = storageManager.readAddressBook().get();
-        assertEquals(original, new AddressBook(retrieved));
-    }
-    */
-    @Test
-    public void getAddressBookFilePath() {
-        assertNotNull(storageManager.getAddressBookFilePath());
+        storageManager.savePerson(original);
+        ReadOnlyPerson retrieved = storageManager.readPerson().get();
+        assertEquals(original, new Person(retrieved));
     }
 
     @Test
-    public void handleAddressBookChangedEvent_exceptionThrown_eventRaised() {
+    public void getPersonFilePath() {
+        assertNotNull(storageManager.getPersonFilePath());
+    }
+
+    @Test
+    public void handlePersonChangedEvent_exceptionThrown_eventRaised() {
         // Create a StorageManager while injecting a stub that  throws an exception when the save method is called
         Storage storage = new StorageManager(new XmlAddressBookStorageExceptionThrowingStub(
-                "dummy"), new XmlJournalStorage("Dummy"), new JsonUserPrefsStorage("dummy"));
-        storage.handleAddressBookChangedEvent(new AddressBookChangedEvent(new AddressBook()));
+                "dummy"), new XmlJournalStorage("Dummy"), new JsonUserPrefsStorage("dummy"),
+                new FileTimetableStorage("dummy1", "dummy2",
+                        "dummy3"));
+        storage.handlePersonChangedEvent(new PersonChangedEvent(new Person(ALICE)));
+        assertTrue(eventsCollectorRule.eventsCollector.getMostRecent() instanceof DataSavingExceptionEvent);
+    }
+
+    @Test
+    public void handleJournalChangedEvent_exceptionThrown_eventRaised() {
+        // Create a StorageManager while injecting a stub that  throws an exception when the save method is called
+        Storage storage = new StorageManager(new XmlPersonStorage("dummy"),
+            new XmlJournalStorageExceptionThrowingStub("Dummy"), new JsonUserPrefsStorage("dummy"),
+                new FileTimetableStorage("dummy1", "dummy2",
+                        "dummy3"));
+        storage.handleJournalChangedEvent(new JournalChangedEvent(new Journal()));
         assertTrue(eventsCollectorRule.eventsCollector.getMostRecent() instanceof DataSavingExceptionEvent);
     }
 
@@ -85,14 +106,29 @@ public class StorageManagerTest {
     /**
      * A Stub class to throw an exception when the save method is called
      */
-    class XmlAddressBookStorageExceptionThrowingStub extends XmlAddressBookStorage {
+    class XmlAddressBookStorageExceptionThrowingStub extends XmlPersonStorage {
 
         public XmlAddressBookStorageExceptionThrowingStub(String filePath) {
             super(filePath);
         }
 
         @Override
-        public void saveAddressBook(ReadOnlyAddressBook addressBook, String filePath) throws IOException {
+        public void savePerson(ReadOnlyPerson person, String filePath) throws IOException {
+            throw new IOException("dummy exception");
+        }
+    }
+
+    /**
+     * A Stub class to throw an exception when the save method is called
+     */
+    class XmlJournalStorageExceptionThrowingStub extends XmlJournalStorage {
+
+        public XmlJournalStorageExceptionThrowingStub(String filePath) {
+            super(filePath);
+        }
+
+        @Override
+        public void saveJournal(ReadOnlyJournal readOnlyJournal, String filePath) throws IOException {
             throw new IOException("dummy exception");
         }
     }

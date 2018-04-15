@@ -6,10 +6,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.AddAppointmentCommand;
 import seedu.address.logic.parser.exceptions.ParseException;
-import seedu.address.model.person.Appointment.Appointment;
+import seedu.address.model.person.appointment.Appointment;
 
 //@@author chenxing1992
 public class AddAppointmentParserTest {
@@ -34,14 +33,14 @@ public class AddAppointmentParserTest {
     @Test
     public void nonParsableString() throws ParseException {
         thrown.expect(ParseException.class);
-        parser.parse("appt 1 d/lunch ,cant parse this string");
+        parser.parse("appt d/lunch ,cant parse this string");
     }
     @Test
     public void parseDateExpression() throws ParseException, java.text.ParseException {
 
         AddAppointmentCommand command = parser.parse("appt 1 d/Lunch, tomorrow 5pm");
         Appointment appointment = AddAppointmentParser.getAppointmentFromString("Lunch, tomorrow 5pm");
-        assertEquals(new AddAppointmentCommand(Index.fromOneBased(1), appointment), command);
+        assertEquals(new AddAppointmentCommand(appointment), command);
 
     }
 
@@ -51,7 +50,7 @@ public class AddAppointmentParserTest {
         try {
             AddAppointmentCommand command = parser.parse("appt 1 d/Lunch, tomorrow 5pm to 7pm");
             Appointment appointment = AddAppointmentParser.getAppointmentFromString("Lunch, tomorrow 5pm to 7pm");
-            assertEquals(new AddAppointmentCommand(Index.fromOneBased(1), appointment), command);
+            assertEquals(new AddAppointmentCommand(appointment), command);
         } catch (ParseException e) {
             e.printStackTrace();
         }

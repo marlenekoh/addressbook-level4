@@ -1,6 +1,7 @@
 package seedu.address.commons.events.ui;
 
-import seedu.address.commons.core.index.Index;
+import static seedu.address.model.person.Person.PARTNER_INDEX;
+
 import seedu.address.commons.events.BaseEvent;
 
 /**
@@ -10,8 +11,8 @@ public class JumpToListRequestEvent extends BaseEvent {
 
     public final int targetIndex;
 
-    public JumpToListRequestEvent(Index targetIndex) {
-        this.targetIndex = targetIndex.getZeroBased();
+    public JumpToListRequestEvent() {
+        this.targetIndex = PARTNER_INDEX;
     }
 
     @Override

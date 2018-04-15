@@ -1,6 +1,8 @@
 package seedu.address.ui;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,16 +19,16 @@ import com.calendarfx.view.CalendarView;
 import com.google.common.eventbus.Subscribe;
 
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.layout.Region;
 import javafx.scene.web.WebView;
 import seedu.address.MainApp;
 import seedu.address.commons.core.LogsCenter;
-import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.commons.events.model.PersonChangedEvent;
 import seedu.address.commons.events.ui.CalendarViewEvent;
-import seedu.address.model.person.Appointment.Appointment;
 import seedu.address.model.person.ReadOnlyPerson;
+import seedu.address.model.person.appointment.Appointment;
 
 /**
  * The Browser Panel of the App.
@@ -38,6 +40,9 @@ public class BrowserPanel extends UiPart<Region> {
     public static final String SEARCH_PAGE_URL =
             "https://se-edu.github.io/addressbook-level4/DummySearchPage.html?name=";
 
+    private static final String JAR_DATA_FILE_FOLDER = "/data/";
+    private static final String INTELLIJ_DATA_FILE_FOLDER = "\\data\\";
+    private static final String FILE_PREFIX = "file:";
     private static final String FXML = "BrowserPanel.fxml";
 
     private final Logger logger = LogsCenter.getLogger(this.getClass());
@@ -47,27 +52,28 @@ public class BrowserPanel extends UiPart<Region> {
 
     @FXML
     private CalendarView calendarView;
-    private ObservableList<ReadOnlyPerson> personList;
+    private ReadOnlyPerson partner;
 
     //@@author chenxing1992
-    public BrowserPanel(ObservableList<ReadOnlyPerson> personList) {
+    public BrowserPanel(ReadOnlyPerson partner) {
         super(FXML);
 
         // To prevent triggering events for typing inside the loaded Web page.
-        //  getRoot().setOnKeyPressed(Event::consume);
+        getRoot().setOnKeyPressed(Event::consume);
 
-        this.personList = personList;
+        this.partner = partner;
 
         calendarView = new CalendarView();
         calendarView.setRequestedTime(LocalTime.now());
         calendarView.setToday(LocalDate.now());
         calendarView.setTime(LocalTime.now());
-        updateCalendar();
+        if (partner != null) {
+            updateCalendar();
+        }
+
         disableViews();
         registerAsAnEventHandler(this);
 
-        //loadDefaultPage();
-        //registerAsAnEventHandler(this);
     }
 
     //@@author chenxing1992
@@ -149,20 +155,20 @@ public class BrowserPanel extends UiPart<Region> {
      * Creates a new a calendar with the update information
      */
     private void updateCalendar() {
-        setTime();
-        CalendarSource calendarSource = new CalendarSource("Appointments");
-        int styleNum = 0;
-        for (ReadOnlyPerson person : personList) {
-            Calendar calendar = getCalendar(styleNum, person);
+        try {
+            setTime();
+            CalendarSource calendarSource = new CalendarSource("Appointments");
+            int styleNum = 0;
+            Calendar calendar = getCalendar(styleNum,  partner);
             calendarSource.getCalendars().add(calendar);
-            ArrayList<Entry> entries = getEntries(person);
-            styleNum++;
-            styleNum = styleNum % 5;
+            ArrayList<Entry> entries = getEntries(partner);
             for (Entry entry : entries) {
                 calendar.addEntry(entry);
             }
+            calendarView.getCalendarSources().add(calendarSource);
+        } catch (NullPointerException npe) {
+            return;
         }
-        calendarView.getCalendarSources().add(calendarSource);
     }
     //@@author chenxing1992
     @Subscribe
@@ -173,11 +179,48 @@ public class BrowserPanel extends UiPart<Region> {
 
     //@@author marlenekoh
     /**
-     * Loads the timetable page of a person into browser panel
+     * Loads the timetable page of a person into browser panel.
      */
     public void loadTimetablePage() {
-        URL timetablePage = MainApp.class.getResource(FXML_FILE_FOLDER + TIMETABLE_PAGE);
-        loadPage(timetablePage.toExternalForm());
+        String timetablePageUrl;
+        if (runningFromIntelliJ()) {
+            timetablePageUrl = FILE_PREFIX + getIntellijRootDir() + INTELLIJ_DATA_FILE_FOLDER + TIMETABLE_PAGE;
+        } else {
+            timetablePageUrl = getJarDir() + JAR_DATA_FILE_FOLDER + TIMETABLE_PAGE;
+        }
+        loadPage(timetablePageUrl);
+    }
+
+    /**
+     * Gets the directory containing the root folder
+     * @return a String containing the directory path
+     */
+    private String getIntellijRootDir() {
+        return System.getProperty("user.dir");
+    }
+
+    /**
+     * Gets the directory containing the executing jar.
+     * @return a String containing the directory path
+     */
+    private String getJarDir() {
+        String jarPath = getClass().getProtectionDomain().getCodeSource().getLocation().toExternalForm();
+        try {
+            jarPath = URLDecoder.decode(jarPath, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.warning("The Character Encoding is not supported.");
+        }
+        return jarPath.substring(0, jarPath.lastIndexOf('/'));
+    }
+
+    /**
+     * Checks if the current code is running from IntelliJ (for debugging) or from the jar file.
+     * @return true if running from IntelliJ
+     */
+    private static boolean runningFromIntelliJ() {
+        String classPath = System.getProperty("java.class.path");
+        Logger logger = LogsCenter.getLogger(MainApp.class);
+        return classPath.contains("idea_rt.jar");
     }
 
     //@@author
@@ -198,12 +241,10 @@ public class BrowserPanel extends UiPart<Region> {
     }
 
     @Subscribe
-    private void handleNewAppointmentEvent(AddressBookChangedEvent event) {
-        personList = event.data.getPersonList();
+    private void handleNewAppointmentEvent(PersonChangedEvent event) {
         Platform.runLater(
                 this::updateCalendar
         );
-
     }
 
     /**

@@ -35,13 +35,6 @@ public class PersonListPanelHandle extends NodeHandle<ListView<PersonCard>> {
     }
 
     /**
-     * Returns the index of the selected card.
-     */
-    public int getSelectedCardIndex() {
-        return getRootNode().getSelectionModel().getSelectedIndex();
-    }
-
-    /**
      * Returns true if a card is currently selected.
      */
     public boolean isAnyCardSelected() {
@@ -88,13 +81,6 @@ public class PersonListPanelHandle extends NodeHandle<ListView<PersonCard>> {
                 .map(card -> new PersonCardHandle(card.getRoot()))
                 .findFirst();
         return handle.orElseThrow(() -> new IllegalArgumentException("Person does not exist."));
-    }
-
-    /**
-     * Selects the {@code PersonCard} at {@code index} in the list.
-     */
-    public void select(int index) {
-        getRootNode().getSelectionModel().select(index);
     }
 
     /**

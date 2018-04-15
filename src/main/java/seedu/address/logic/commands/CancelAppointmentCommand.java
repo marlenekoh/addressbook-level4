@@ -3,8 +3,8 @@ package seedu.address.logic.commands;
 import seedu.address.commons.core.EventsCenter;
 import seedu.address.commons.events.ui.CalendarViewEvent;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.model.person.Appointment.Appointment;
 import seedu.address.model.person.ReadOnlyPerson;
+import seedu.address.model.person.appointment.Appointment;
 import seedu.address.model.person.exceptions.AppointmentNotFoundException;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 
@@ -18,7 +18,7 @@ public class CancelAppointmentCommand extends UndoableCommand {
     public static final String COMMAND_WORD = "cancel";
     public static final String NO_SUCH_PERSON_FOUND = "No such person found";
     public static final String NO_SUCH_APPOINTMENT = "No such appointment found";
-    public static final String MESSAGE_SUCCESS = "Appointment canceled.";
+    public static final String MESSAGE_SUCCESS = "appointment canceled.";
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Cancels an appointment from a person. \n"
             + "Parameters: " + "DESCRIPTION with PERSON NAME \n"
             + "Example 1:" + COMMAND_WORD + " "
@@ -71,10 +71,8 @@ public class CancelAppointmentCommand extends UndoableCommand {
      */
     private ReadOnlyPerson getPersonFromName(String personName) throws PersonNotFoundException {
 
-        for (ReadOnlyPerson person : model.getAddressBook().getPersonList()) {
-            if (person.getName().toString().equalsIgnoreCase(personName.trim())) {
-                return person;
-            }
+        if (model.getPartner().getName().fullName.equalsIgnoreCase(personName.trim())) {
+            return model.getPartner();
         }
 
         throw new PersonNotFoundException();

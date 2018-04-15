@@ -29,6 +29,7 @@ background {
     -fx-font-size: 12pt;
     -fx-font-family: sans-serif;
     -fx-border-color: transparent;
+    -fx-prompt-text-fill: white;
 }
 
 .tab-pane {
@@ -108,8 +109,8 @@ background {
 }
 
 .list-cell:filled:selected #cardPane { /* Used for border on selected cell */
-    -fx-border-color: green;
-    -fx-border-width: 0;
+    -fx-border-color: darkblue;
+    -fx-border-width: 1;
 }
 
 .list-cell .label {
@@ -156,7 +157,7 @@ background {
 
 .status-bar .label { /* Status bar font */
     -fx-font-family: sans-serif;
-    -fx-text-fill: white;
+    -fx-text-fill: dimgray;
 }
 
 .status-bar-with-border {
@@ -270,7 +271,7 @@ background {
 }
 
 .scroll-bar .thumb { /* Scroll bar background color */
-    -fx-background-color: #B3B3B3;
+    -fx-background-color: #762cb9;
     -fx-background-insets: 3;
 }
 

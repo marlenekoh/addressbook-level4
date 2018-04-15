@@ -1,12 +1,9 @@
 package seedu.address.ui;
 
-import java.util.logging.Logger;
-
 import javafx.fxml.FXML;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.events.model.SaveEntryEvent;
 import seedu.address.model.journalentry.JournalEntry;
 
@@ -17,8 +14,6 @@ import seedu.address.model.journalentry.JournalEntry;
 public class JournalWindow extends UiPart<Stage> {
 
     private static final String FXML = "JournalWindow.fxml";
-
-    private final Logger logger = LogsCenter.getLogger(this.getClass());
 
     private JournalEntryText journalEntryText;
     private String date;
@@ -44,7 +39,6 @@ public class JournalWindow extends UiPart<Stage> {
 
         root.setTitle(date + " - Journal");
         root.initModality(Modality.APPLICATION_MODAL);
-
     }
 
     public JournalWindow(String date, String text) {

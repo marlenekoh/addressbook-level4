@@ -6,5 +6,9 @@
     <email>hans@example</email>
     <address>4th street</address>
     <timetable>http://modsn.us/wNuIW</timetable>
-    <tagged>friends</tagged>
+    <appointments>
+        <description>lunch</description>
+        <appointmentStart>2018/04/16 12:35</appointmentStart>
+        <appointmentEnd>2018/04/16 13:35</appointmentEnd>
+    </appointments>
 </person>

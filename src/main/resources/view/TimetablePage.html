@@ -2,8 +2,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="TimetablePageScript.js"></script>
+    <script type="text/javascript">
+        timetable = [];
+        var myTimetable = "";
+        var nRows = "";
+        var nCells = "";
+
+        function displaySchedule(){
+            for (i=0; i<nRows; i++) {
+                for (n=0; n<nCells; n++) {
+                    myTimetable.rows[i+1].cells[n+1].lastChild.data = timetable[n+(i*nCells)];
+                }
+            }
+        }
+        function mapTable(){
+            myTimetable = document.getElementById('myTimetable');
+            nRows = myTimetable.rows.length-1;
+            nCells = myTimetable.rows[0].cells.length-1;
+            displaySchedule();
+        }
+        document.addEventListener("DOMContentLoaded", function(event) {
+            mapTable();
+        });
+    </script>
     <link rel="stylesheet" type="text/css" href="TimetableStyle.css">
+    <meta http-equiv="refresh" content="1">
     <meta charset="UTF-8">
     <title>Timetable</title>
 </head>

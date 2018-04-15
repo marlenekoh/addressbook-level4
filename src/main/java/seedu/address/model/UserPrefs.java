@@ -10,9 +10,12 @@ import seedu.address.commons.core.GuiSettings;
 public class UserPrefs {
 
     private GuiSettings guiSettings;
-    private String addressBookFilePath = "data/addressbook.xml";
+    private String personFilePath = "data/person.xml";
     private String journalFilePath = "data/journal.xml";
-    private String addressBookName = "MyAddressBook";
+    private String nusCouplesName = "NUSCouples";
+    private String timetablePageHtmlPath = "data/TimetablePage.html";
+    private String timetablePageCssPath = "data/TimetableStyle.css";
+    private String timetableInfoFilePath = "data/timetableDisplayInfo";
 
     public UserPrefs() {
         this.setGuiSettings(500, 500, 0, 0);
@@ -30,24 +33,36 @@ public class UserPrefs {
         guiSettings = new GuiSettings(width, height, x, y);
     }
 
-    public String getAddressBookFilePath() {
-        return addressBookFilePath;
+    public String getPersonFilePath() {
+        return personFilePath;
     }
 
     public String getJournalFilePath() {
         return journalFilePath;
     }
 
-    public void setAddressBookFilePath(String addressBookFilePath) {
-        this.addressBookFilePath = addressBookFilePath;
+    public void setPersonFilePath(String personFilePath) {
+        this.personFilePath = personFilePath;
     }
 
-    public String getAddressBookName() {
-        return addressBookName;
+    public String getNusCouplesName() {
+        return nusCouplesName;
     }
 
-    public void setAddressBookName(String addressBookName) {
-        this.addressBookName = addressBookName;
+    public void setNusCouplesName(String nusCouplesName) {
+        this.nusCouplesName = nusCouplesName;
+    }
+
+    public String getTimetablePageHtmlPath() {
+        return timetablePageHtmlPath;
+    }
+
+    public String getTimetableInfoFilePath() {
+        return timetableInfoFilePath;
+    }
+
+    public String getTimetablePageCssPath() {
+        return timetablePageCssPath;
     }
 
     @Override
@@ -62,21 +77,25 @@ public class UserPrefs {
         UserPrefs o = (UserPrefs) other;
 
         return Objects.equals(guiSettings, o.guiSettings)
-                && Objects.equals(addressBookFilePath, o.addressBookFilePath)
-                && Objects.equals(addressBookName, o.addressBookName);
+                && Objects.equals(personFilePath, o.personFilePath)
+                && Objects.equals(journalFilePath, o.journalFilePath)
+                && Objects.equals(nusCouplesName, o.nusCouplesName)
+                && Objects.equals(timetableInfoFilePath, o.timetableInfoFilePath)
+                && Objects.equals(timetablePageHtmlPath, o.timetablePageHtmlPath);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(guiSettings, addressBookFilePath, addressBookName);
+        return Objects.hash(guiSettings, personFilePath, nusCouplesName);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Gui Settings : " + guiSettings.toString());
-        sb.append("\nLocal data file location : " + addressBookFilePath);
-        sb.append("\nAddressBook name : " + addressBookName);
+        sb.append("\nLocal person data file location : " + personFilePath);
+        sb.append("\nLocal journal data file location : " + journalFilePath);
+        sb.append("\nNUSCouples name : " + nusCouplesName);
         return sb.toString();
     }
 

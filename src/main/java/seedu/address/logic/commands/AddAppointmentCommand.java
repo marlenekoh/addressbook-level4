@@ -4,60 +4,45 @@ import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATE;
 
 import java.util.Calendar;
-import java.util.List;
 
-import seedu.address.commons.core.Messages;
-import seedu.address.commons.core.index.Index;
 import seedu.address.logic.commands.exceptions.CommandException;
-import seedu.address.model.Model;
-import seedu.address.model.person.Appointment.Appointment;
 import seedu.address.model.person.ReadOnlyPerson;
+import seedu.address.model.person.appointment.Appointment;
 import seedu.address.model.person.exceptions.PersonNotFoundException;
 
 //@@author chenxing1992
 
 /**
- * Command to add Appointment to a person in addressBook
+ * Command to add appointment to a person in addressBook
  */
 public class AddAppointmentCommand extends UndoableCommand {
 
-    public static final String COMMAND_WORD = "Appointment";
+    public static final String COMMAND_WORD = "appointment";
     public static final String COMMAND_ALIAS = "appt";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds an Appointment to a person in address book. \n"
+    public static final String MESSAGE_USAGE = COMMAND_WORD + ": Adds an appointment to a person in address book. \n"
             + COMMAND_ALIAS + ": Shorthand equivalent for add. \n"
             + "Parameters: " + COMMAND_WORD + " INDEX "
             + PREFIX_DATE + "DESCRIPTION, TIME" + "\n"
             + "Example 1:" + COMMAND_WORD + " 1 "
             + PREFIX_DATE + "Lunch, Next Monday 3pm";
 
-    public static final String MESSAGE_SUCCESS = "New Appointment added. ";
+    public static final String MESSAGE_SUCCESS = "New appointment added. ";
     public static final String INVALID_PERSON = "This person is not in your address book";
     public static final String INVALID_DATE = "Invalid Date. Please enter a valid date.";
-    public static final String SORT_APPOINTMENT_FEEDBACK = "Rearranged contacts to show upcoming appointments.";
+    public static final String DUPLICATE_APPT = "Duplicate Event found on same timing. Please select other time.";
 
-
-    private final Index index;
     private final Appointment appointment;
 
-    public AddAppointmentCommand(Index index, Appointment appointment) {
-        this.index = index;
+    public AddAppointmentCommand(Appointment appointment) {
         this.appointment = appointment;
     }
+
     //@@author chenxing1992
     @Override
     protected CommandResult executeUndoableCommand() throws CommandException {
 
-        List<ReadOnlyPerson> lastShownList = model.getFilteredPersonList();
-
-        requireNonNull(index);
-        requireNonNull(appointment);
-
-        if (index.getZeroBased() >= lastShownList.size()) {
-            throw new CommandException(Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-        }
-
-        ReadOnlyPerson personToAddAppointment = lastShownList.get(index.getZeroBased());
+        ReadOnlyPerson personToAddAppointment = model.getPartner();
 
         if (appointment.getDate() != null && !isDateValid()) {
             return new CommandResult(INVALID_DATE);
@@ -73,17 +58,14 @@ public class AddAppointmentCommand extends UndoableCommand {
 
     }
     //@@author chenxing1992
+
     /**
-     * Checks if Appointment date set to after current time
+     * Checks if appointment date set to after current time
      */
     private boolean isDateValid() {
         requireNonNull(appointment);
         Calendar calendar = Calendar.getInstance();
         return !appointment.getDate().before(calendar.getTime());
-    }
-    //@@author chenxing1992
-    public Index getIndex() {
-        return this.index;
     }
 
     //@@author chenxing1992
@@ -91,17 +73,7 @@ public class AddAppointmentCommand extends UndoableCommand {
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof AddAppointmentCommand // instanceof handles nulls
-                && (this.index.getZeroBased() == ((AddAppointmentCommand) other).index.getZeroBased())
                 && (this.appointment.equals(((AddAppointmentCommand) other).appointment)));
-    }
-
-    //@@author chenxing1992
-    /**
-     * For testing purposes
-     *
-     */
-    public void setData(Model model) {
-        this.model = model;
     }
 
 }

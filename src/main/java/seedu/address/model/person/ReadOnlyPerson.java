@@ -1,16 +1,11 @@
 package seedu.address.model.person;
 
 import java.util.List;
-import java.util.Set;
 
 import javafx.beans.property.ObjectProperty;
-import seedu.address.model.person.Appointment.Appointment;
-import seedu.address.model.person.Appointment.AppointmentList;
+import seedu.address.model.person.appointment.Appointment;
+import seedu.address.model.person.appointment.AppointmentList;
 import seedu.address.model.person.timetable.Timetable;
-import seedu.address.model.tag.Tag;
-import seedu.address.model.tag.UniqueTagList;
-
-
 
 //@@author chenxing1992
 /**
@@ -20,29 +15,36 @@ import seedu.address.model.tag.UniqueTagList;
 public interface ReadOnlyPerson {
 
     ObjectProperty<Name> nameProperty();
-    Name getName();
     ObjectProperty<Phone> phoneProperty();
-    Phone getPhone();
     ObjectProperty<Email> emailProperty();
-    Email getEmail();
     ObjectProperty<Address> addressProperty();
-    Address getAddress();
     ObjectProperty<Timetable> timeTableProperty();
-    Timetable getTimetable();
-    ObjectProperty<UniqueTagList> tagProperty();
-    Set<Tag> getTags();
     ObjectProperty<AppointmentList> appointmentProperty();
+
+    Name getName();
+
+    Phone getPhone();
+
+    Email getEmail();
+
+    Address getAddress();
+
+    Timetable getTimetable();
+
     List<Appointment> getAppointments();
+
+    /**
     /**Same state detected will return true.
      */
-    default boolean isSameStateAs(ReadOnlyPerson rp) {
+    default boolean equals(ReadOnlyPerson rp) {
         return rp == this // short circuit if same object
                 || (rp != null // this is first to avoid NPE below
                 && rp.getName().equals(this.getName()) // state checks here onwards
                 && rp.getPhone().equals(this.getPhone())
                 && rp.getEmail().equals(this.getEmail())
                 && rp.getAddress().equals(this.getAddress())
-                && rp.getTimetable().equals((this.getTimetable())));
+                && rp.getTimetable().equals((this.getTimetable()))
+                && rp.getAppointments().equals(this.getAppointments()));
     }
 
     //@@author chenxing1992
@@ -59,9 +61,8 @@ public interface ReadOnlyPerson {
                 .append(" Address: ")
                 .append(getAddress())
                 .append(" TimeTable: ")
-                .append(getTimetable())
-                .append(" Tags: ");
-        getTags().forEach(b::append);
+                .append(getTimetable());
+
         return b.toString();
     }
 

@@ -23,7 +23,7 @@ public class NewJournalCommand extends Command {
         int dd = currentDate.getDayOfMonth();
         int mm = currentDate.getMonth().getValue();
         int yyyy = currentDate.getYear();
-        return String.format("%04d", yyyy) + String.format("%02d", mm) + String.format("%02d", dd);
+        return String.format("%04d" + "%02d" + "%02d", yyyy , mm, dd);
     }
 
     @Override

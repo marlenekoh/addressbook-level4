@@ -21,6 +21,7 @@ import seedu.address.MainApp;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.commons.util.StringUtil;
 
+//@@author marlenekoh-unused
 /**
  * A class containing utility methods to encrypt and decrypt files for Storage
  */
